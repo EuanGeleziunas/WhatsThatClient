@@ -1,10 +1,9 @@
-import React from 'react';
-import { Text, View } from 'react-native';
+/* eslint-disable react/prefer-stateless-function */
+import React, { Component } from 'react';
+import SignUp from './components/signUp';
 
-export default function App() {
-  return (
-    <View>
-      <Text>Hello World!</Text>
-    </View>
-  );
+export default class App extends Component {
+  render() {
+    return <SignUp />;
+  }
 }
