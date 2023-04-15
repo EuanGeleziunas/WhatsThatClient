@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable react/prop-types */
 /* eslint-disable prefer-regex-literals */
 /* eslint-disable global-require */
 /* eslint-disable import/no-extraneous-dependencies */
@@ -12,6 +14,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from './brandButton';
@@ -34,31 +37,54 @@ class SignUp extends Component {
   }
 
   onPressButton() {
-    this.setState({ submitted: true });
-    this.setState({ error: '' });
+    // this.setState({ submitted: true });
+    // this.setState({ error: '' });
 
-    if (!(this.state.email && this.state.password)) {
-      this.setState({ error: 'Must enter email and password' });
-    }
+    // if (!(this.state.email && this.state.password)) {
+    //   this.setState({ error: 'Must enter email and password' });
+    // }
 
-    const emailValidator = require('email-validator');
+    // const emailValidator = require('email-validator');
 
-    if (!emailValidator.validate(this.state.email)) {
-      this.setState({ error: 'Must enter valid email' });
-    }
+    // if (!emailValidator.validate(this.state.email)) {
+    //   this.setState({ error: 'Must enter valid email' });
+    // }
 
-    const PASSWORD_REGEX = new RegExp(
-      '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
-    );
+    // const PASSWORD_REGEX = new RegExp(
+    //   '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
+    // );
 
-    if (!PASSWORD_REGEX.test(this.state.password)) {
-      this.setState({ error: "Password isn't strong enough" });
-    }
+    // if (!PASSWORD_REGEX.test(this.state.password)) {
+    //   this.setState({ error: "Password isn't strong enough" });
+    // }
 
     console.log('Button is clicked');
+
+    const dataToSend = {
+      first_name: this.state.firstName,
+      last_name: this.state.lastName,
+      email: this.state.email,
+      password: this.state.password,
+    };
+
+    return fetch('http://localhost:3333/api/1.0.0/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    })
+      .then(() => {
+        Alert.alert('User added');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   render() {
+    const navigation = this.props.navigation;
+
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -117,7 +143,7 @@ class SignUp extends Component {
             <BrandButton text="Sign Up" onPress={this.onPressButton} />
             <View style={styles.signInRedirectContainer}>
               <Text style={styles.signInText}>Already have an account?</Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.signInLink}> Sign in</Text>
               </TouchableOpacity>
             </View>

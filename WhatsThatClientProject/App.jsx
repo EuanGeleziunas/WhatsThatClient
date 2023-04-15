@@ -1,9 +1,25 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
-import SignUp from './components/signUp';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default class App extends Component {
+import SignUp from './components/signUp';
+import Login from './components/login';
+
+const Stack = createNativeStackNavigator();
+
+class App extends Component {
   render() {
-    return <SignUp />;
+    return (
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen name="Login" component={Login} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
   }
 }
+
+export default App;
