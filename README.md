@@ -1,1 +1,1 @@
-# whats-that-client
+# WhatsThatClient
