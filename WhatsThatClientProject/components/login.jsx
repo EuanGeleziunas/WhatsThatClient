@@ -15,8 +15,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
-  AsyncStorage,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from './brandButton';
 
@@ -55,6 +55,10 @@ class Login extends Component {
 
     console.log('Button is clicked');
 
+    this.login();
+  }
+
+  login = async () => {
     return fetch('http://localhost:3333/api/1.0.0/login', {
       method: 'POST',
       headers: {
@@ -74,13 +78,20 @@ class Login extends Component {
       })
       .then(async (responseJson) => {
         console.log(responseJson);
-        await AsyncStorage.setItem('@session_token', responseJson.token);
-        this.props.navigation.navigate('Home');
+        try {
+          await AsyncStorage.setItem('id', responseJson.id);
+          await AsyncStorage.setItem('token', responseJson.token);
+
+          this.setState({ submitted: false });
+          this.props.navigation.navigate('Home');
+        } catch {
+          throw 'Something went wrong';
+        }
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   render() {
     const navigation = this.props.navigation;
@@ -105,6 +116,7 @@ class Login extends Component {
               placeholder="Enter password"
               onChangeText={(password) => this.setState({ password })}
               value={this.state.password}
+              secureTextEntry
               style={styles.formInput}
             />
           </View>

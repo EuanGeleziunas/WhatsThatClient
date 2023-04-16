@@ -134,6 +134,7 @@ class SignUp extends Component {
               placeholder="Enter password"
               onChangeText={(password) => this.setState({ password })}
               value={this.state.password}
+              secureTextEntry
               style={styles.formInput}
             />
           </View>
@@ -145,6 +146,7 @@ class SignUp extends Component {
                 this.setState({ confirmPassword })
               }
               value={this.state.confirmPassword}
+              secureTextEntry
               style={styles.formInput}
             />
           </View>
