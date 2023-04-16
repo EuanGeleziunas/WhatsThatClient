@@ -14,7 +14,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from './brandButton';
@@ -74,9 +73,7 @@ class SignUp extends Component {
       },
       body: JSON.stringify(dataToSend),
     })
-      .then(() => {
-        Alert.alert('User added');
-      })
+      .then(() => {})
       .catch((error) => {
         console.log(error);
       });
@@ -84,7 +81,6 @@ class SignUp extends Component {
 
   render() {
     const navigation = this.props.navigation;
-
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
