@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-regex-literals */
@@ -73,9 +74,22 @@ class SignUp extends Component {
       },
       body: JSON.stringify(dataToSend),
     })
-      .then(() => {})
+      .then((response) => {
+        if (response.status === 201) {
+          return response.json();
+        } else if (response.status === 400) {
+          console.log('Failed validation or incorrect request');
+          throw response;
+        } else {
+          throw response;
+        }
+      })
+      .then((responseJson) => {
+        console.log('User created with ID: ', responseJson);
+        this.props.navigation.navigate('Login');
+      })
       .catch((error) => {
-        console.log(error);
+        throw error;
       });
   }
 

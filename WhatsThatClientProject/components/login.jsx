@@ -1,3 +1,4 @@
+/* eslint-disable no-else-return */
 /* eslint-disable prefer-destructuring */
 /* eslint-disable react/prop-types */
 /* eslint-disable prefer-regex-literals */
@@ -14,6 +15,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  AsyncStorage,
 } from 'react-native';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from './brandButton';
@@ -26,7 +28,58 @@ class Login extends Component {
       email: '',
       password: '',
     };
-    // this.onPressButton = this.onPressButton.bind(this);
+    this.onPressButton = this.onPressButton.bind(this);
+  }
+
+  onPressButton() {
+    // this.setState({ submitted: true });
+    // this.setState({ error: '' });
+
+    // if (!(this.state.email && this.state.password)) {
+    //   this.setState({ error: 'Must enter email and password' });
+    // }
+
+    // const emailValidator = require('email-validator');
+
+    // if (!emailValidator.validate(this.state.email)) {
+    //   this.setState({ error: 'Must enter valid email' });
+    // }
+
+    // const PASSWORD_REGEX = new RegExp(
+    //   '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
+    // );
+
+    // if (!PASSWORD_REGEX.test(this.state.password)) {
+    //   this.setState({ error: "Password isn't strong enough" });
+    // }
+
+    console.log('Button is clicked');
+
+    return fetch('http://localhost:3333/api/1.0.0/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state),
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 400) {
+          console.log('Invalid email or password');
+          throw response;
+        } else {
+          throw response;
+        }
+      })
+      .then(async (responseJson) => {
+        console.log(responseJson);
+        await AsyncStorage.setItem('@session_token', responseJson.token);
+        this.props.navigation.navigate('Home');
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   render() {
@@ -57,7 +110,7 @@ class Login extends Component {
           </View>
 
           <View style={styles.formItem}>
-            <BrandButton text="Login" onPress={this.onPress} />
+            <BrandButton text="Login" onPress={this.onPressButton} />
             <View style={styles.signUpRedirectContainer}>
               <Text style={styles.signUpText}>Don&apos;t have an account?</Text>
               <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
