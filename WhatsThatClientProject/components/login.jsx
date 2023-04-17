@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BiErrorCircle } from 'react-icons/bi';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from './brandButton';
 
@@ -17,52 +18,65 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
+      error: '',
+      submitted: false,
     };
     this.onPressButton = this.onPressButton.bind(this);
   }
 
   onPressButton() {
-    // this.setState({ submitted: true });
-    // this.setState({ error: '' });
-
-    // if (!(this.state.email && this.state.password)) {
-    //   this.setState({ error: 'Must enter email and password' });
-    // }
-
-    // const emailValidator = require('email-validator');
-
-    // if (!emailValidator.validate(this.state.email)) {
-    //   this.setState({ error: 'Must enter valid email' });
-    // }
-
-    // const PASSWORD_REGEX = new RegExp(
-    //   '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
-    // );
-
-    // if (!PASSWORD_REGEX.test(this.state.password)) {
-    //   this.setState({ error: "Password isn't strong enough" });
-    // }
-
     console.log('Button is clicked');
+    this.setState({ submitted: true });
+    this.setState({ error: '' });
 
-    this.login();
+    console.log('State before validation', this.state);
+
+    if (this.isFormValid()) {
+      this.loginRequest();
+    }
   }
 
-  login = async () => {
+  isFormValid() {
+    if (!(this.state.email && this.state.password)) {
+      console.log('state before setting error', this.state);
+      this.setState({ error: 'Must enter an email and password' }, () => {});
+      console.log('state after setting error', this.state);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  loginRequest = async () => {
+    const requestBody = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+
     return fetch('http://localhost:3333/api/1.0.0/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.state),
+      body: JSON.stringify(requestBody),
     })
       .then((response) => {
         if (response.status === 200) {
           return response.json();
         } else if (response.status === 400) {
-          console.log('Invalid email or password');
+          this.setState(
+            {
+              error:
+                'Email and password combination are not linked to an account',
+            },
+            () => {}
+          );
           throw response;
         } else {
+          this.setState(
+            { error: 'Something went wrong. Please try again' },
+            () => {}
+          );
           throw response;
         }
       })
@@ -85,6 +99,7 @@ class Login extends Component {
 
   render() {
     const navigation = this.props.navigation;
+    const error = this.state.error;
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -92,6 +107,12 @@ class Login extends Component {
           <Text style={styles.subTitle}>Login</Text>
         </View>
         <View style={styles.loginContainer}>
+          {error ? (
+            <View style={styles.errorContainer}>
+              <BiErrorCircle style={styles.errorIcon} />
+              <Text style={styles.errorText}>{this.state.error}</Text>
+            </View>
+          ) : null}
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter email"
@@ -149,6 +170,30 @@ const styles = StyleSheet.create({
     flexBasis: '30%',
     width: '100%',
     justifyContent: 'space-around',
+  },
+  errorContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: brandStyles.red,
+    backgroundColor: brandStyles.pink,
+    paddingVertical: 10,
+    paddingHorizontal: brandStyles.textInputPadding,
+  },
+  errorIcon: {
+    color: brandStyles.red,
+    fontSize: 16,
+    textTransform: 'uppercase',
+    marginRight: 5,
+  },
+  errorText: {
+    color: brandStyles.red,
+    fontSize: 16,
+    textTransform: 'uppercase',
+    marginLeft: 5,
   },
   formItem: {
     width: '100%',

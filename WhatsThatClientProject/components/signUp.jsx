@@ -33,10 +33,12 @@ class SignUp extends Component {
     this.setState({ submitted: true });
     this.setState({ error: '' });
 
-    this.validateForm();
+    if (this.isFormValid()) {
+      this.signUpRequest();
+    }
   }
 
-  validateForm() {
+  isFormValid() {
     console.log('state before checking all fields', this.state);
 
     const emailValidator = require('email-validator');
@@ -54,21 +56,25 @@ class SignUp extends Component {
     ) {
       this.setState({ error: 'All fields required!' }, () => {
         console.log('state after checking all fields', this.state);
+        return false;
       });
     } else if (!emailValidator.validate(this.state.email)) {
       this.setState({ error: 'Must enter a valid email' }, () => {});
+      return false;
     } else if (!PASSWORD_REGEX.test(this.state.password)) {
       this.setState({ error: 'Password is not strong enough' }, () => {});
+      return false;
     } else if (this.state.password !== this.state.confirmPassword) {
       this.setState({ error: 'Passwords do not match' }, () => {});
+      return false;
     } else {
       console.log('Form Validation Passed', this.state);
-      this.signUp();
+      return true;
     }
   }
 
-  signUp = async () => {
-    const dataToSend = {
+  signUpRequest = async () => {
+    const requestBody = {
       first_name: this.state.firstName,
       last_name: this.state.lastName,
       email: this.state.email,
@@ -80,15 +86,22 @@ class SignUp extends Component {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(dataToSend),
+      body: JSON.stringify(requestBody),
     })
       .then((response) => {
         if (response.status === 201) {
           return response.json();
         } else if (response.status === 400) {
-          console.log('Failed validation or incorrect request');
+          this.setState(
+            { error: 'Account with this email already exists' },
+            () => {}
+          );
           throw response;
         } else {
+          this.setState(
+            { error: 'Something went wrong. Please try again' },
+            () => {}
+          );
           throw response;
         }
       })
@@ -217,14 +230,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textTransform: 'uppercase',
     marginRight: 5,
-    // flexBasis: '15%',
   },
   errorText: {
     color: brandStyles.red,
     fontSize: 16,
     textTransform: 'uppercase',
     marginLeft: 5,
-    // flexBasis: '85%',
   },
   formItem: {
     width: '100%',
