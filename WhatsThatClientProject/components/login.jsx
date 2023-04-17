@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import {
   View,
@@ -36,22 +38,9 @@ class Login extends Component {
     }
   }
 
-  isFormValid() {
-    if (!(this.state.email && this.state.password)) {
-      console.log('state before setting error', this.state);
-      this.setState({ error: 'Must enter an email and password' }, () => {});
-      console.log('state after setting error', this.state);
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   loginRequest = async () => {
-    const requestBody = {
-      email: this.state.email,
-      password: this.state.password,
-    };
+    const { email, password } = this.state;
+    const requestBody = { email, password };
 
     return fetch('http://localhost:3333/api/1.0.0/login', {
       method: 'POST',
@@ -63,33 +52,35 @@ class Login extends Component {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
-        } else if (response.status === 400) {
+        }
+        if (response.status === 400) {
           this.setState(
             {
               error:
                 'Email and password combination are not linked to an account',
             },
-            () => {}
+            () => {},
           );
-          throw response;
         } else {
           this.setState(
             { error: 'Something went wrong. Please try again' },
-            () => {}
+            () => {},
           );
-          throw response;
         }
+
+        throw response;
       })
-      .then(async (responseJson) => {
-        console.log(responseJson);
+
+      .then(async ({ id, token }) => {
+        console.log({ id, token });
         try {
-          await AsyncStorage.setItem('id', responseJson.id);
-          await AsyncStorage.setItem('token', responseJson.token);
+          await AsyncStorage.setItem('id', id);
+          await AsyncStorage.setItem('token', token);
 
           this.setState({ submitted: false });
           this.props.navigation.navigate('Home');
-        } catch {
-          throw 'Something went wrong';
+        } catch (error) {
+          throw new Error('Something went wrong');
         }
       })
       .catch((error) => {
@@ -97,9 +88,20 @@ class Login extends Component {
       });
   };
 
+  isFormValid() {
+    const { email, password } = this.state;
+    if (!(email && password)) {
+      console.log('state before setting error', this.state);
+      this.setState({ error: 'Must enter an email and password' }, () => {});
+      console.log('state after setting error', this.state);
+      return false;
+    }
+    return true;
+  }
+
   render() {
-    const navigation = this.props.navigation;
-    const error = this.state.error;
+    const { navigation } = this.props;
+    const { email, password, error } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -110,14 +112,14 @@ class Login extends Component {
           {error ? (
             <View style={styles.errorContainer}>
               <BiErrorCircle style={styles.errorIcon} />
-              <Text style={styles.errorText}>{this.state.error}</Text>
+              <Text style={styles.errorText}>{error}</Text>
             </View>
           ) : null}
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter email"
-              onChangeText={(email) => this.setState({ email })}
-              value={this.state.email}
+              onChangeText={(text) => this.setState({ email: text })}
+              value={email}
               style={styles.formInput}
             />
           </View>
@@ -125,8 +127,8 @@ class Login extends Component {
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter password"
-              onChangeText={(password) => this.setState({ password })}
-              value={this.state.password}
+              onChangeText={(text) => this.setState({ password: text })}
+              value={password}
               secureTextEntry
               style={styles.formInput}
             />
