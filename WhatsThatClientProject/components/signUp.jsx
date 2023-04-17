@@ -1,13 +1,3 @@
-/* eslint-disable no-else-return */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable react/prop-types */
-/* eslint-disable prefer-regex-literals */
-/* eslint-disable global-require */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable import/named */
-/* eslint-disable no-use-before-define */
-/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
   View,
@@ -16,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import { BiErrorCircle } from 'react-icons/bi';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from './brandButton';
 
@@ -37,29 +28,46 @@ class SignUp extends Component {
   }
 
   onPressButton() {
-    // this.setState({ submitted: true });
-    // this.setState({ error: '' });
-
-    // if (!(this.state.email && this.state.password)) {
-    //   this.setState({ error: 'Must enter email and password' });
-    // }
-
-    // const emailValidator = require('email-validator');
-
-    // if (!emailValidator.validate(this.state.email)) {
-    //   this.setState({ error: 'Must enter valid email' });
-    // }
-
-    // const PASSWORD_REGEX = new RegExp(
-    //   '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
-    // );
-
-    // if (!PASSWORD_REGEX.test(this.state.password)) {
-    //   this.setState({ error: "Password isn't strong enough" });
-    // }
-
     console.log('Button is clicked');
 
+    this.setState({ submitted: true });
+    this.setState({ error: '' });
+
+    this.validateForm();
+  }
+
+  validateForm() {
+    console.log('state before checking all fields', this.state);
+
+    const emailValidator = require('email-validator');
+
+    const PASSWORD_REGEX = new RegExp(
+      '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$'
+    );
+
+    if (
+      !this.state.firstName ||
+      !this.state.lastName ||
+      !this.state.email ||
+      !this.state.password ||
+      !this.state.confirmPassword
+    ) {
+      this.setState({ error: 'All fields required!' }, () => {
+        console.log('state after checking all fields', this.state);
+      });
+    } else if (!emailValidator.validate(this.state.email)) {
+      this.setState({ error: 'Must enter a valid email' }, () => {});
+    } else if (!PASSWORD_REGEX.test(this.state.password)) {
+      this.setState({ error: 'Password is not strong enough' }, () => {});
+    } else if (this.state.password !== this.state.confirmPassword) {
+      this.setState({ error: 'Passwords do not match' }, () => {});
+    } else {
+      console.log('Form Validation Passed', this.state);
+      this.signUp();
+    }
+  }
+
+  signUp = async () => {
     const dataToSend = {
       first_name: this.state.firstName,
       last_name: this.state.lastName,
@@ -91,10 +99,11 @@ class SignUp extends Component {
       .catch((error) => {
         throw error;
       });
-  }
+  };
 
   render() {
     const navigation = this.props.navigation;
+    const error = this.state.error;
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -102,6 +111,12 @@ class SignUp extends Component {
           <Text style={styles.subTitle}>Sign Up</Text>
         </View>
         <View style={styles.signUpContainer}>
+          {error ? (
+            <View style={styles.errorContainer}>
+              <BiErrorCircle style={styles.errorIcon} />
+              <Text style={styles.errorText}>{this.state.error}</Text>
+            </View>
+          ) : null}
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter first name"
@@ -110,7 +125,6 @@ class SignUp extends Component {
               style={styles.formInput}
             />
           </View>
-
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter last name"
@@ -119,7 +133,6 @@ class SignUp extends Component {
               style={styles.formInput}
             />
           </View>
-
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter email"
@@ -128,7 +141,6 @@ class SignUp extends Component {
               style={styles.formInput}
             />
           </View>
-
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter password"
@@ -138,7 +150,6 @@ class SignUp extends Component {
               style={styles.formInput}
             />
           </View>
-
           <View style={styles.formItem}>
             <TextInput
               placeholder="Confirm password"
@@ -150,7 +161,6 @@ class SignUp extends Component {
               style={styles.formInput}
             />
           </View>
-
           <View style={styles.formItem}>
             <BrandButton text="Sign Up" onPress={this.onPressButton} />
             <View style={styles.signInRedirectContainer}>
@@ -189,6 +199,32 @@ const styles = StyleSheet.create({
     flexBasis: '85%',
     width: '100%',
     justifyContent: 'space-around',
+  },
+  errorContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderStyle: 'solid',
+    borderColor: brandStyles.red,
+    backgroundColor: brandStyles.pink,
+    paddingVertical: 10,
+    paddingHorizontal: brandStyles.textInputPadding,
+  },
+  errorIcon: {
+    color: brandStyles.red,
+    fontSize: 16,
+    textTransform: 'uppercase',
+    marginRight: 5,
+    // flexBasis: '15%',
+  },
+  errorText: {
+    color: brandStyles.red,
+    fontSize: 16,
+    textTransform: 'uppercase',
+    marginLeft: 5,
+    // flexBasis: '85%',
   },
   formItem: {
     width: '100%',

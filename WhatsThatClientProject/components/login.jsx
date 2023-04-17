@@ -1,13 +1,3 @@
-/* eslint-disable no-else-return */
-/* eslint-disable prefer-destructuring */
-/* eslint-disable react/prop-types */
-/* eslint-disable prefer-regex-literals */
-/* eslint-disable global-require */
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable react/no-unused-state */
-/* eslint-disable import/named */
-/* eslint-disable no-use-before-define */
-/* eslint-disable react/destructuring-assignment */
 import React, { Component } from 'react';
 import {
   View,
