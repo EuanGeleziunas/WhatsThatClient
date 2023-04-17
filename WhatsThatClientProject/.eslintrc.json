@@ -11,6 +11,8 @@
   },
   "plugins": ["react"],
   "rules": {
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "object-curly-newline": "off",
+    "operator-linebreak": "off"
   }
 }
