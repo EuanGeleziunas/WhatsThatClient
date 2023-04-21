@@ -1,12 +1,13 @@
+/* eslint-disable no-else-return */
 /* eslint-disable consistent-return */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { BiErrorCircle } from 'react-icons/bi';
 import emailValidator from 'email-validator';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from './brandButton';
+import ErrorBox from './errorBox';
 
 class SignUp extends Component {
   constructor(props) {
@@ -33,6 +34,8 @@ class SignUp extends Component {
 
     if (this.isFormValid()) {
       this.signUpRequest();
+    } else {
+      console.log('logging state after validating form', this.state);
     }
   }
 
@@ -88,8 +91,8 @@ class SignUp extends Component {
     ) {
       this.setState({ error: 'All fields required!' }, () => {
         console.log('state after checking all fields', this.state);
-        return false;
       });
+      return false;
     } else if (!emailValidator.validate(this.state.email)) {
       this.setState({ error: 'Must enter a valid email' }, () => {});
       return false;
@@ -115,12 +118,8 @@ class SignUp extends Component {
           <Text style={styles.subTitle}>Sign Up</Text>
         </View>
         <View style={styles.signUpContainer}>
-          {error ? (
-            <View style={styles.errorContainer}>
-              <BiErrorCircle style={styles.errorIcon} />
-              <Text style={styles.errorText}>{this.state.error}</Text>
-            </View>
-          ) : null}
+          {console.log('error', error)}
+          {error ? <ErrorBox errorMessage={error} /> : null}
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter first name"
@@ -201,30 +200,6 @@ const styles = StyleSheet.create({
     flexBasis: '85%',
     width: '100%',
     justifyContent: 'space-around',
-  },
-  errorContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: brandStyles.red,
-    backgroundColor: brandStyles.pink,
-    paddingVertical: 10,
-    paddingHorizontal: brandStyles.textInputPadding,
-  },
-  errorIcon: {
-    color: brandStyles.red,
-    fontSize: 16,
-    textTransform: 'uppercase',
-    marginRight: 5,
-  },
-  errorText: {
-    color: brandStyles.red,
-    fontSize: 16,
-    textTransform: 'uppercase',
-    marginLeft: 5,
   },
   formItem: {
     width: '100%',
