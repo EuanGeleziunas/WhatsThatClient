@@ -1,5 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -15,17 +13,14 @@ class Login extends Component {
       email: '',
       password: '',
       error: '',
-      submitted: false,
+      // submitted: false,
     };
     this.onPressButton = this.onPressButton.bind(this);
   }
 
   onPressButton() {
-    console.log('Button is clicked');
-    this.setState({ submitted: true });
+    // this.setState({ submitted: true });
     this.setState({ error: '' });
-
-    console.log('State before validation', this.state);
 
     if (this.isFormValid()) {
       this.loginRequest();
@@ -35,6 +30,7 @@ class Login extends Component {
   loginRequest = async () => {
     const { email, password } = this.state;
     const requestBody = { email, password };
+    const { navigation } = this.props;
 
     return fetch('http://localhost:3333/api/1.0.0/login', {
       method: 'POST',
@@ -62,28 +58,26 @@ class Login extends Component {
       })
 
       .then(async ({ id, token }) => {
-        console.log({ id, token });
         try {
           await AsyncStorage.setItem('id', id);
           await AsyncStorage.setItem('token', token);
 
-          this.setState({ submitted: false });
-          this.props.navigation.navigate('Home');
+          // this.setState({ submitted: false });
+          navigation.navigate('Home');
         } catch (error) {
           throw new Error('Something went wrong');
         }
       })
       .catch((error) => {
-        console.log(error);
+        throw new Error(error);
       });
   };
 
   isFormValid() {
     const { email, password } = this.state;
     if (!(email && password)) {
-      console.log('state before setting error', this.state);
       this.setState({ error: 'Must enter an email and password' }, () => {});
-      console.log('state after setting error', this.state);
+
       return false;
     }
     return true;

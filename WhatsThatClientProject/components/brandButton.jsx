@@ -1,10 +1,6 @@
-/* eslint-disable react/prefer-stateless-function */
-/* eslint-disable react/prop-types */
-/* eslint-disable no-use-before-define */
-/* eslint-disable import/no-named-as-default */
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View } from 'react-native';
-import brandStyles from '../src/styles/brandStyles';
+import { brandStyles } from '../src/styles/brandStyles';
 
 class BrandButton extends React.Component {
   render() {

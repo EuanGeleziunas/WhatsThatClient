@@ -1,7 +1,3 @@
-/* eslint-disable no-else-return */
-/* eslint-disable consistent-return */
-/* eslint-disable react/destructuring-assignment */
-/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import emailValidator from 'email-validator';
@@ -47,6 +43,7 @@ class SignUp extends Component {
       email,
       password,
     };
+    const { navigation } = this.props;
 
     return fetch('http://localhost:3333/api/1.0.0/user', {
       method: 'POST',
@@ -70,7 +67,7 @@ class SignUp extends Component {
       })
       .then((responseJson) => {
         console.log('User created with ID: ', responseJson);
-        this.props.navigation.navigate('Login');
+        navigation.navigate('Login');
       })
       .catch((error) => {
         throw error;
@@ -78,28 +75,23 @@ class SignUp extends Component {
   };
 
   isFormValid() {
+    const { firstName, lastName, email, password, confirmPassword } = this.state;
     console.log('state before checking all fields', this.state);
 
     const PASSWORD_REGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/;
 
-    if (
-      !this.state.firstName ||
-      !this.state.lastName ||
-      !this.state.email ||
-      !this.state.password ||
-      !this.state.confirmPassword
-    ) {
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
       this.setState({ error: 'All fields required!' }, () => {
         console.log('state after checking all fields', this.state);
       });
       return false;
-    } else if (!emailValidator.validate(this.state.email)) {
+    } else if (!emailValidator.validate(email)) {
       this.setState({ error: 'Must enter a valid email' }, () => {});
       return false;
-    } else if (!PASSWORD_REGEX.test(this.state.password)) {
+    } else if (!PASSWORD_REGEX.test(password)) {
       this.setState({ error: 'Password is not strong enough' }, () => {});
       return false;
-    } else if (this.state.password !== this.state.confirmPassword) {
+    } else if (password !== confirmPassword) {
       this.setState({ error: 'Passwords do not match' }, () => {});
       return false;
     } else {
@@ -110,7 +102,7 @@ class SignUp extends Component {
 
   render() {
     const { navigation } = this.props;
-    const { error } = this.state;
+    const { firstName, lastName, email, password, confirmPassword, error } = this.state;
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
@@ -123,32 +115,32 @@ class SignUp extends Component {
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter first name"
-              onChangeText={(firstName) => this.setState({ firstName })}
-              value={this.state.firstName}
+              onChangeText={(text) => this.setState({ firstName: text })}
+              value={firstName}
               style={styles.formInput}
             />
           </View>
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter last name"
-              onChangeText={(lastName) => this.setState({ lastName })}
-              value={this.state.lastName}
+              onChangeText={(text) => this.setState({ lastName: text })}
+              value={lastName}
               style={styles.formInput}
             />
           </View>
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter email"
-              onChangeText={(email) => this.setState({ email })}
-              value={this.state.email}
+              onChangeText={(text) => this.setState({ email: text })}
+              value={email}
               style={styles.formInput}
             />
           </View>
           <View style={styles.formItem}>
             <TextInput
               placeholder="Enter password"
-              onChangeText={(password) => this.setState({ password })}
-              value={this.state.password}
+              onChangeText={(text) => this.setState({ password: text })}
+              value={password}
               secureTextEntry
               style={styles.formInput}
             />
@@ -156,8 +148,8 @@ class SignUp extends Component {
           <View style={styles.formItem}>
             <TextInput
               placeholder="Confirm password"
-              onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
-              value={this.state.confirmPassword}
+              onChangeText={(text) => this.setState({ confirmPassword: text })}
+              value={confirmPassword}
               secureTextEntry
               style={styles.formInput}
             />
