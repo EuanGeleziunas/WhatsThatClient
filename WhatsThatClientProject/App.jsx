@@ -3,25 +3,39 @@
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import SignUp from './components/signUp';
-import Login from './components/login';
-import Home from './components/home';
+import SignUpScreen from './screens/signUpScreen';
+import LoginScreen from './screens/loginScreen';
+import ContactScreen from './screens/contactScreen';
+import ChatScreen from './screens/chatScreen';
+import ProfileScreen from './screens/profileScreen';
+import SettingsScreen from './screens/settingsScreen';
 
-const Stack = createNativeStackNavigator();
+const AuthStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
-class App extends Component {
+function MainAppNavigation() {
+  return (
+    <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="ProfileScreen">
+      <Tab.Screen name="ContactScreen" component={ContactScreen} />
+      <Tab.Screen name="ChatScreen" component={ChatScreen} />
+      <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
+      <Tab.Screen name="SettingsScreen" component={SettingsScreen} />
+    </Tab.Navigator>
+  );
+}
+
+export default class App extends Component {
   render() {
     return (
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="SignUp" component={SignUp} />
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Home" component={Home} />
-        </Stack.Navigator>
+        <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+          <AuthStack.Screen name="SignUp" component={SignUpScreen} />
+          <AuthStack.Screen name="Login" component={LoginScreen} />
+          <AuthStack.Screen name="MainAppNavigation" component={MainAppNavigation} />
+        </AuthStack.Navigator>
       </NavigationContainer>
     );
   }
 }
-
-export default App;

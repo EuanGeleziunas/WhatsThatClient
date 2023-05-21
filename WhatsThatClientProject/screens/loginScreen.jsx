@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from './brandButton';
-import ErrorBox from './errorBox';
+import BrandButton from '../components/brandButton';
+import ErrorBox from '../components/errorBox';
 
 class Login extends Component {
   constructor(props) {
@@ -59,11 +59,11 @@ class Login extends Component {
 
       .then(async ({ id, token }) => {
         try {
-          await AsyncStorage.setItem('id', id);
-          await AsyncStorage.setItem('token', token);
+          await AsyncStorage.setItem('userId', id);
+          await AsyncStorage.setItem('sessionAuthToken', token);
 
           // this.setState({ submitted: false });
-          navigation.navigate('Home');
+          navigation.navigate('MainAppNavigation');
         } catch (error) {
           throw new Error('Something went wrong');
         }

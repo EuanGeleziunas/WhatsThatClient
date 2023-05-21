@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import emailValidator from 'email-validator';
 import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from './brandButton';
-import ErrorBox from './errorBox';
+import BrandButton from '../components/brandButton';
+import ErrorBox from '../components/errorBox';
 
 class SignUp extends Component {
   constructor(props) {
