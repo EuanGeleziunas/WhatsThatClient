@@ -43,7 +43,7 @@ function MainAppNavigation() {
       tabBarOptions={{
         activeTintColor: brandStyles.orange,
       }}
-      initialRouteName="ProfileScreen"
+      initialRouteName="Profile"
     >
       <Tab.Screen name="Contacts" component={ContactScreen} />
       <Tab.Screen name="Chats" component={ChatScreen} />

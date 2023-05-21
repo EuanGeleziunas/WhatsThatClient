@@ -31,6 +31,7 @@ class Login extends Component {
     const { email, password } = this.state;
     const requestBody = { email, password };
     const { navigation } = this.props;
+    console.log('ReqBody', requestBody);
 
     return fetch('http://localhost:3333/api/1.0.0/login', {
       method: 'POST',
