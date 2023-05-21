@@ -1,9 +1,13 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react/prefer-stateless-function */
 import React, { Component } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { brandStyles } from './src/styles/brandStyles';
 
 import SignUpScreen from './screens/signUpScreen';
 import LoginScreen from './screens/loginScreen';
@@ -17,11 +21,34 @@ const Tab = createBottomTabNavigator();
 
 function MainAppNavigation() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false }} initialRouteName="ProfileScreen">
-      <Tab.Screen name="ContactScreen" component={ContactScreen} />
-      <Tab.Screen name="ChatScreen" component={ChatScreen} />
-      <Tab.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Tab.Screen name="SettingsScreen" component={SettingsScreen} />
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Contacts') {
+            iconName = focused ? 'people' : 'people-outline';
+          } else if (route.name === 'Chats') {
+            iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
+          } else if (route.name === 'Profile') {
+            iconName = focused ? 'person' : 'person-outline';
+          } else if (route.name === 'Settings') {
+            iconName = focused ? 'settings' : 'settings-outline';
+          }
+
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+      })}
+      tabBarOptions={{
+        activeTintColor: brandStyles.orange,
+      }}
+      initialRouteName="ProfileScreen"
+    >
+      <Tab.Screen name="Contacts" component={ContactScreen} />
+      <Tab.Screen name="Chats" component={ChatScreen} />
+      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }
