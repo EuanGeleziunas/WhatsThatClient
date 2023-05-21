@@ -16,7 +16,6 @@ export default class ProfileScreen extends Component {
       // error: '',
       isLoading: true,
     };
-
     this.onLogoutPressButton = this.onLogoutPressButton.bind(this);
   }
 
@@ -47,8 +46,8 @@ export default class ProfileScreen extends Component {
       const json = await response.json();
 
       this.setState({
-        firstName: json.firstName,
-        lastName: json.lastName,
+        firstName: json.first_name,
+        lastName: json.last_name,
         email: json.email,
         isLoading: false,
       });
@@ -115,6 +114,10 @@ export default class ProfileScreen extends Component {
             Email:
             {this.state.email}
           </Text>
+          <BrandButton
+            text="Update Profile"
+            onPress={() => this.props.navigation.navigate('UpdateProfileScreen')}
+          />
           <BrandButton text="Logout" onPress={this.onLogoutPressButton} />
         </View>
       );
