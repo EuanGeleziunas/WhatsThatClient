@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -116,7 +117,15 @@ export default class ProfileScreen extends Component {
           </Text>
           <BrandButton
             text="Update Profile"
-            onPress={() => this.props.navigation.navigate('UpdateProfileScreen')}
+            onPress={() =>
+              this.props.navigation.navigate('UpdateProfileScreen', {
+                data: {
+                  firstName: this.state.firstName,
+                  lastName: this.state.lastName,
+                  email: this.state.email,
+                },
+              })
+            }
           />
           <BrandButton text="Logout" onPress={this.onLogoutPressButton} />
         </View>

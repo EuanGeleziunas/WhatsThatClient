@@ -14,8 +14,10 @@
     "no-use-before-define": "off",
     "object-curly-newline": "off",
     "operator-linebreak": "off",
+    "dot-notation": "off",
     "no-else-return": "off",
     "react/prop-types": 0,
-    "react/prefer-stateless-function": 0
+    "react/prefer-stateless-function": 0,
+    "react/jsx-curly-newline": 0
   }
 }

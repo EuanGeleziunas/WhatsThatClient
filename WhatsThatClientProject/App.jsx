@@ -57,7 +57,7 @@ function MainAppNavigation() {
 
 function ProfileStackNavigation() {
   return (
-    <ProfileStack.Navigator>
+    <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
       <ProfileStack.Screen name="Profile" component={ProfileScreen} />
       <ProfileStack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
     </ProfileStack.Navigator>
