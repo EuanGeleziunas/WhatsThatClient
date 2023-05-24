@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, FlatList } from 'react-native';
 import BrandButton from '../components/brandButton';
+import Contact from '../components/contact';
 
 export default class ContactScreen extends Component {
   constructor(props) {
@@ -80,12 +81,7 @@ export default class ContactScreen extends Component {
           />
           <FlatList
             data={this.state.contacts}
-            renderItem={({ item }) => (
-              <Text>
-                {item.first_name}
-                {item.last_name}
-              </Text>
-            )}
+            renderItem={({ item }) => <Contact contact={item} isBlocked={false} isFriend />}
           />
         </View>
       );
