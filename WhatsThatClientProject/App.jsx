@@ -16,9 +16,11 @@ import ChatScreen from './screens/chatScreen';
 import ProfileScreen from './screens/profileScreen';
 import SettingsScreen from './screens/settingsScreen';
 import UpdateProfileScreen from './screens/updateProfileScreen';
+import AddContactScreen from './screens/addContactScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+const ContactStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 
 function MainAppNavigation() {
@@ -47,11 +49,20 @@ function MainAppNavigation() {
       }}
       initialRouteName="Profile"
     >
-      <Tab.Screen name="Contacts" component={ContactScreen} />
+      <Tab.Screen name="Contacts" component={ContactStackNavigation} />
       <Tab.Screen name="Chats" component={ChatScreen} />
       <Tab.Screen name="Profile" component={ProfileStackNavigation} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
+  );
+}
+
+function ContactStackNavigation() {
+  return (
+    <ContactStack.Navigator screenOptions={{ headerShown: false }}>
+      <ContactStack.Screen name="Contacts" component={ContactScreen} />
+      <ContactStack.Screen name="AddContactScreen" component={AddContactScreen} />
+    </ContactStack.Navigator>
   );
 }
 
