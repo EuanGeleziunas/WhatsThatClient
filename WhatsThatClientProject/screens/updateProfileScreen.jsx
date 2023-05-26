@@ -112,7 +112,7 @@ export default class UpdateProfileScreen extends Component {
         <Button title="Update Profile" onPress={this.onUpdatePressButton} />
         <Button
           title="Update Photo"
-          onPress={() => this.props.navigation.navigate('CameraComponent', {})}
+          onPress={() => this.props.navigation.navigate('CameraFunc', {})}
         />
       </View>
     );

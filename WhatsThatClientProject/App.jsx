@@ -17,6 +17,7 @@ import ProfileScreen from './screens/profileScreen';
 import SettingsScreen from './screens/settingsScreen';
 import UpdateProfileScreen from './screens/updateProfileScreen';
 import AddContactScreen from './screens/addContactScreen';
+import CameraScreen from './screens/cameraScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -71,6 +72,7 @@ function ProfileStackNavigation() {
     <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
       <ProfileStack.Screen name="Profile" component={ProfileScreen} />
       <ProfileStack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
+      <ProfileStack.Screen name="CameraFunc" component={CameraScreen} />
     </ProfileStack.Navigator>
   );
 }
