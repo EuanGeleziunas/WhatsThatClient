@@ -16,6 +16,7 @@
     "operator-linebreak": "off",
     "dot-notation": "off",
     "no-else-return": "off",
+    "no-extraneous-dependencies": "off",
     "react/prop-types": 0,
     "react/prefer-stateless-function": 0,
     "react/jsx-curly-newline": 0

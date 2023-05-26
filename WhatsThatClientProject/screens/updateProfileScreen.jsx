@@ -110,6 +110,10 @@ export default class UpdateProfileScreen extends Component {
           secureTextEntry
         />
         <Button title="Update Profile" onPress={this.onUpdatePressButton} />
+        <Button
+          title="Update Photo"
+          onPress={() => this.props.navigation.navigate('CameraComponent', {})}
+        />
       </View>
     );
   }

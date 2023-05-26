@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator } from 'react-native';
+import { View, Image, Text, ActivityIndicator } from 'react-native';
 import BrandButton from '../components/brandButton';
 
 export default class ProfileScreen extends Component {
@@ -14,6 +14,7 @@ export default class ProfileScreen extends Component {
       firstName: '',
       lastName: '',
       email: '',
+      photo: '',
       // error: '',
       isLoading: true,
     };
@@ -24,6 +25,7 @@ export default class ProfileScreen extends Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       if (this.checkLoggedIn()) {
         this.getUserRequest();
+        this.getProfilePhotoRequest();
       }
     });
   }
@@ -52,6 +54,30 @@ export default class ProfileScreen extends Component {
         email: json.email,
         isLoading: false,
       });
+    } catch (error) {
+      this.setState({
+        // error: 'Failed to fetch profile data.',
+      });
+    }
+  };
+
+  getProfilePhotoRequest = async () => {
+    try {
+      const id = await AsyncStorage.getItem('userId');
+      fetch(`http://localhost:3333/api/1.0.0/user/${id}/photo`, {
+        method: 'GET',
+        headers: {
+          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
+        },
+      })
+        .then((response) => response.blob())
+        .then((responseBlob) => {
+          const data = URL.createObjectURL(responseBlob);
+          this.setState({
+            photo: data,
+            isLoading: false,
+          });
+        });
     } catch (error) {
       this.setState({
         // error: 'Failed to fetch profile data.',
@@ -103,6 +129,15 @@ export default class ProfileScreen extends Component {
       return (
         <View>
           <Text>Profile Screen</Text>
+          <Image
+            source={{
+              uri: this.state.photo,
+            }}
+            style={{
+              width: 100,
+              height: 100,
+            }}
+          />
           <Text>
             FirstName:
             {this.state.firstName}
