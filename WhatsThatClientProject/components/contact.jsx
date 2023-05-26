@@ -14,6 +14,8 @@ export default class Contact extends React.Component {
       isLoading: false,
       error: '',
     };
+
+    console.log('props', this.props);
   }
 
   onUnBlockPressButton = async () => {
@@ -62,6 +64,9 @@ export default class Contact extends React.Component {
 
       if (response.status === 200) {
         this.setState({ isBlocked: false });
+        if (this.props.onClick) {
+          this.props.onClick();
+        }
       } else if (response.status === 400) {
         this.setState({ error: 'You can not block yourself.' });
       } else if (response.status === 401) {
@@ -91,6 +96,9 @@ export default class Contact extends React.Component {
 
       if (response.status === 200) {
         this.setState({ isBlocked: true });
+        if (this.props.onClick) {
+          this.props.onClick();
+        }
       } else if (response.status === 400) {
         this.setState({ error: 'You can not block yourself.' });
       } else if (response.status === 401) {
@@ -120,6 +128,9 @@ export default class Contact extends React.Component {
 
       if (response.status === 200) {
         this.setState({ isFriend: false });
+        if (this.props.onClick) {
+          this.props.onClick();
+        }
       } else if (response.status === 400) {
         this.setState({ error: 'You can not unFriend yourself.' });
       } else if (response.status === 401) {
@@ -149,6 +160,9 @@ export default class Contact extends React.Component {
 
       if (response.status === 200) {
         this.setState({ isFriend: true });
+        if (this.props.onClick) {
+          this.props.onClick();
+        }
       } else if (response.status === 400) {
         this.setState({ error: 'You can add yourself.' });
       } else if (response.status === 401) {
@@ -175,7 +189,9 @@ export default class Contact extends React.Component {
         <View style={styles.contact}>
           <Text>{this.state.error}</Text>
           <View style={styles.contactImage} />
-          <Text style={styles.contactName}>{this.state.contact.first_name}</Text>
+          <Text style={styles.contactName}>
+            {this.state.contact.first_name ?? this.state.contact.given_name}
+          </Text>
           {this.state.isBlocked ? (
             <Button title="UnBlock" onPress={this.onUnBlockPressButton} />
           ) : (

@@ -14,6 +14,7 @@ export default class ContactScreen extends Component {
       contacts: [],
       error: '',
       isLoading: false,
+      refresh: false,
     };
   }
 
@@ -59,6 +60,7 @@ export default class ContactScreen extends Component {
       });
     } finally {
       this.setState.isLoading = false;
+      this.setState.refresh = !this.state.refresh;
     }
   };
 
@@ -81,7 +83,14 @@ export default class ContactScreen extends Component {
           />
           <FlatList
             data={this.state.contacts}
-            renderItem={({ item }) => <Contact contact={item} isBlocked={false} isFriend />}
+            renderItem={({ item }) => (
+              <Contact
+                contact={item}
+                isBlocked={false}
+                isFriend
+                onClick={this.getContactsRequest}
+              />
+            )}
           />
         </View>
       );
