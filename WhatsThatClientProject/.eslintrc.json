@@ -16,6 +16,8 @@
     "operator-linebreak": "off",
     "dot-notation": "off",
     "no-else-return": "off",
+    // Complains when switching from mac to windows
+    "linebreak-style": "off",
     "no-extraneous-dependencies": "off",
     "react/prop-types": 0,
     "react/prefer-stateless-function": 0,
