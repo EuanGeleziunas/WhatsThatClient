@@ -8,15 +8,20 @@ export default class UpdateProfileScreen extends Component {
   constructor(props) {
     super(props);
 
+    console.log('State at start of constructor', this.state);
+
     this.state = {
       originalData: {},
       firstName: '',
       lastName: '',
       email: '',
+      password: '',
       error: '',
       isLoading: true,
     };
     this.onUpdatePressButton = this.onUpdatePressButton.bind(this);
+
+    console.log('State at end of constructor', this.state);
   }
 
   componentDidMount() {

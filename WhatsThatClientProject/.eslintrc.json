@@ -21,6 +21,8 @@
     "no-extraneous-dependencies": "off",
     "react/prop-types": 0,
     "react/prefer-stateless-function": 0,
-    "react/jsx-curly-newline": 0
+    "react/jsx-curly-newline": 0,
+    // Prevents whitespace for string interpolation
+    "react/jsx-one-expression-per-line": 0
   }
 }

@@ -3,7 +3,8 @@
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { View, Image, Text, ActivityIndicator } from 'react-native';
+import { View, Image, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from '../components/brandButton';
 
 export default class ProfileScreen extends Component {
@@ -127,44 +128,100 @@ export default class ProfileScreen extends Component {
       );
     } else {
       return (
-        <View>
-          <Text>Profile Screen</Text>
-          <Image
-            source={{
-              uri: this.state.photo,
-            }}
-            style={{
-              width: 100,
-              height: 100,
-            }}
-          />
-          <Text>
-            FirstName:
-            {this.state.firstName}
-          </Text>
-          <Text>
-            LastName:
-            {this.state.lastName}
-          </Text>
-          <Text>
-            Email:
-            {this.state.email}
-          </Text>
-          <BrandButton
-            text="Update Profile"
-            onPress={() =>
-              this.props.navigation.navigate('UpdateProfileScreen', {
-                data: {
-                  firstName: this.state.firstName,
-                  lastName: this.state.lastName,
-                  email: this.state.email,
-                },
-              })
-            }
-          />
-          <BrandButton text="Logout" onPress={this.onLogoutPressButton} />
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>WhatsThat</Text>
+            <Text style={styles.subTitle}>Profile</Text>
+          </View>
+
+          <View style={styles.contentsContainer}>
+            <View style={styles.profileImageContainer}>
+              <Image
+                style={styles.profileImage}
+                source={{
+                  uri: this.state.photo,
+                }}
+              />
+            </View>
+
+            <View style={styles.nameContainer}>
+              <Text style={styles.name}>
+                {this.state.firstName} {this.state.lastName}
+              </Text>
+              <Text style={styles.email}>{this.state.email}</Text>
+            </View>
+          </View>
+          <View style={styles.buttonsContainer}>
+            <BrandButton
+              text="Update Profile"
+              style={styles.updateProfileButton}
+              onPress={() =>
+                this.props.navigation.navigate('UpdateProfileScreen', {
+                  data: {
+                    firstName: this.state.firstName,
+                    lastName: this.state.lastName,
+                    email: this.state.email,
+                  },
+                })
+              }
+            />
+            <BrandButton
+              style={styles.logoutButton}
+              text="Logout"
+              onPress={this.onLogoutPressButton}
+            />
+          </View>
         </View>
       );
     }
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: brandStyles.whiteSmoke,
+    flex: 1,
+    flexDirection: 'column',
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+  },
+  titleContainer: {
+    flexBasis: '15%',
+    justifyContent: 'center',
+  },
+  title: {
+    color: brandStyles.orange,
+    fontSize: 25,
+  },
+  subTitle: {
+    color: brandStyles.orange,
+    fontSize: 18,
+  },
+  profileImageContainer: {
+    display: 'flex',
+  },
+  profileImage: {
+    alignSelf: 'center',
+    width: 200,
+    height: 200,
+  },
+  nameContainer: {
+    paddingVertical: 50,
+    alignItems: 'center',
+  },
+  name: {
+    color: brandStyles.orange,
+    fontSize: 25,
+  },
+  email: {
+    color: brandStyles.orange,
+    fontSize: 18,
+  },
+  buttonsContainer: {
+    display: 'flex',
+    flexGrow: 0.5,
+    justifyContent: 'space-evenly',
+  },
+  updateProfileButton: {},
+  logoutButton: {},
+});
