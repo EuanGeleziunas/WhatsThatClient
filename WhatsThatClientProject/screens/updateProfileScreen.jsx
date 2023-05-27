@@ -2,7 +2,18 @@
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { View, Text, TextInput, Button } from 'react-native';
+import {
+  ActivityIndicator,
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import { brandStyles } from '../src/styles/brandStyles';
+import BrandButton from '../components/brandButton';
 
 export default class UpdateProfileScreen extends Component {
   constructor(props) {
@@ -17,6 +28,7 @@ export default class UpdateProfileScreen extends Component {
       email: '',
       password: '',
       error: '',
+      photo: '',
       isLoading: true,
     };
     this.onUpdatePressButton = this.onUpdatePressButton.bind(this);
@@ -31,11 +43,14 @@ export default class UpdateProfileScreen extends Component {
         firstName: this.props.route.params.data.firstName,
         lastName: this.props.route.params.data.lastName,
         email: this.props.route.params.data.email,
+        photo: this.props.route.params.data.photo,
         password: '',
       },
       () => {
         console.log('Update profile state', this.state);
       },
+
+      // this.setState.isLoading = false;
     );
   }
 
@@ -89,37 +104,146 @@ export default class UpdateProfileScreen extends Component {
   }
 
   render() {
+    // if (this.state.isLoading) {
+    //   return (
+    //     <View>
+    //       <ActivityIndicator />
+    //     </View>
+    //   );
+    // } else {
     return (
-      <View>
-        <Text>Update Profile Screen</Text>
+      <View style={styles.container}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>WhatsThat</Text>
+          <Text style={styles.subTitle}>Profile</Text>
+        </View>
 
-        <Text>First name:</Text>
-        <TextInput
-          value={this.state.firstName}
-          onChangeText={(val) => this.setState({ firstName: val })}
-        />
+        <View style={styles.contentsContainer}>
+          <View style={styles.profileImageContainer}>
+            <Image
+              style={styles.profileImage}
+              source={{
+                uri: this.state.photo,
+              }}
+            />
+          </View>
 
-        <Text>Last name:</Text>
-        <TextInput
-          value={this.state.lastName}
-          onChangeText={(val) => this.setState({ lastName: val })}
-        />
+          <View style={styles.updatePhotoContainer}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CameraFunc', {})}>
+              <Text style={styles.updatePhotoText}>Update Profile Picture</Text>
+            </TouchableOpacity>
+          </View>
 
-        <Text>Email:</Text>
-        <TextInput value={this.state.email} onChangeText={(val) => this.setState({ email: val })} />
+          <View style={styles.formContainer}>
+            <View style={styles.formItem}>
+              <TextInput
+                value={this.state.firstName}
+                onChangeText={(text) => this.setState({ firstName: text })}
+                style={styles.formInput}
+              />
+            </View>
 
-        <Text>Password:</Text>
-        <TextInput
-          value={this.state.password}
-          onChangeText={(val) => this.setState({ password: val })}
-          secureTextEntry
-        />
-        <Button title="Update Profile" onPress={this.onUpdatePressButton} />
-        <Button
-          title="Update Photo"
-          onPress={() => this.props.navigation.navigate('CameraFunc', {})}
-        />
+            <View style={styles.formItem}>
+              <TextInput
+                value={this.state.lastName}
+                onChangeText={(text) => this.setState({ lastName: text })}
+                style={styles.formInput}
+              />
+            </View>
+
+            <View style={styles.formItem}>
+              <TextInput
+                value={this.state.email}
+                onChangeText={(text) => this.setState({ email: text })}
+                style={styles.formInput}
+              />
+            </View>
+
+            <View style={styles.formItem}>
+              <TextInput
+                placeholder="Update password"
+                value={this.state.password}
+                onChangeText={(text) => this.setState({ password: text })}
+                style={styles.formInput}
+                secureTextEntry
+              />
+            </View>
+
+            <View style={styles.formItem}>
+              <TextInput
+                placeholder="Confirm new password"
+                secureTextEntry
+                style={styles.formInput}
+              />
+            </View>
+
+            <BrandButton
+              style={styles.logoutButton}
+              text="Update Profile"
+              onPress={this.onUpdatePressButton}
+            />
+          </View>
+        </View>
       </View>
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: brandStyles.whiteSmoke,
+    flex: 1,
+    flexDirection: 'column',
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+  },
+  titleContainer: {
+    flexBasis: '15%',
+    justifyContent: 'center',
+  },
+  title: {
+    color: brandStyles.orange,
+    fontSize: 25,
+  },
+  subTitle: {
+    color: brandStyles.orange,
+    fontSize: 18,
+  },
+  contentsContainer: {
+    flexGrow: 1,
+  },
+  profileImageContainer: {
+    display: 'flex',
+  },
+  profileImage: {
+    alignSelf: 'center',
+    width: 200,
+    height: 200,
+  },
+  updatePhotoContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+    flexWrap: 'nowrap',
+    justifyContent: 'center',
+  },
+  updatePhotoText: {
+    color: brandStyles.orange,
+  },
+  formContainer: {
+    width: '100%',
+    justifyContent: 'space-around',
+    flexGrow: 1,
+  },
+  formItem: {
+    width: '100%',
+  },
+  formInput: {
+    height: 40,
+    borderColor: '#E0E0E0',
+    borderWidth: 1,
+    borderRadius: 5,
+    backgroundColor: '#E8E8E8',
+    color: '#696969',
+    paddingLeft: brandStyles.textInputPadding,
+  },
+});

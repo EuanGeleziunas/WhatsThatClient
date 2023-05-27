@@ -161,6 +161,7 @@ export default class ProfileScreen extends Component {
                     firstName: this.state.firstName,
                     lastName: this.state.lastName,
                     email: this.state.email,
+                    photo: this.state.photo,
                   },
                 })
               }
@@ -222,6 +223,4 @@ const styles = StyleSheet.create({
     flexGrow: 0.5,
     justifyContent: 'space-evenly',
   },
-  updateProfileButton: {},
-  logoutButton: {},
 });
