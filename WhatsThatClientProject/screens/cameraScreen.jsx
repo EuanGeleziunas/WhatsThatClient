@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-unused-vars */
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, CameraType, onCameraReady, CameraPictureOptions } from 'expo-camera';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-export default function CameraTakePicture() {
+export default function CameraTakePicture({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [camera, setCamera] = useState(null);
@@ -17,11 +18,41 @@ export default function CameraTakePicture() {
 
   async function takePhoto() {
     if (camera) {
-      const options = { quality: 0.5, base64: true };
+      const options = {
+        quality: 0.5,
+        base64: true,
+        onPictureSaved: (data) => uploadPhotoRequest(data),
+      };
       const data = await camera.takePictureAsync(options);
 
       console.log(data.uri);
     }
+  }
+
+  async function uploadPhotoRequest(data) {
+    const id = await AsyncStorage.getItem('userId');
+    const res = await fetch(data.uri);
+    const blob = await res.blob();
+
+    return fetch(`http://localhost:3333/api/1.0.0/user/${id}/photo`, {
+      method: 'POST',
+      headers: {
+        'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
+        'Content-Type': 'image/png',
+      },
+      body: blob,
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('Picture added', response);
+          navigation.navigate('Profile');
+        } else {
+          console.log('error');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   if (!permission || !permission.granted) {

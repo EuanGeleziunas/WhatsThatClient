@@ -94,6 +94,7 @@ export default class UpdateProfileScreen extends Component {
       .then((response) => {
         if (response.status === 200) {
           console.log('User updated');
+          this.props.navigation.navigate('Profile');
         } else {
           console.log('error');
         }
@@ -177,11 +178,7 @@ export default class UpdateProfileScreen extends Component {
               />
             </View>
 
-            <BrandButton
-              style={styles.logoutButton}
-              text="Update Profile"
-              onPress={this.onUpdatePressButton}
-            />
+            <BrandButton text="Update Profile" onPress={this.onUpdatePressButton} />
           </View>
         </View>
       </View>
