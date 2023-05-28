@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -5,6 +6,7 @@ import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import BrandButton from '../components/brandButton';
 import Contact from '../components/contact';
+import ContactListItem from '../components/contactListItem';
 import { brandStyles } from '../src/styles/brandStyles';
 
 export default class ContactScreen extends Component {
@@ -88,17 +90,24 @@ export default class ContactScreen extends Component {
             />
             <BrandButton
               text="Blocked users"
-              onPress={() => this.props.navigation.navigate('AddContactScreen')}
+              onPress={() => this.props.navigation.navigate('BlockedListScreen')}
             />
           </View>
+          {console.log('contacts', this.state.contacts)}
           <FlatList
             data={this.state.contacts}
             renderItem={({ item }) => (
-              <Contact
-                contact={item}
-                isBlocked={false}
-                isFriend
-                onClick={this.getContactsRequest}
+              <ContactListItem
+                userId={item.user_id}
+                firstName={item.first_name}
+                lastName={item.last_name}
+                onPress={() =>
+                  this.props.navigation.navigate('ContactProfileScreen', {
+                    data: {
+                      userId: item.user_id,
+                    },
+                  })
+                }
               />
             )}
           />

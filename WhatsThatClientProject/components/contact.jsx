@@ -18,7 +18,7 @@ export default class Contact extends React.Component {
       error: '',
     };
 
-    console.log('props', this.props);
+    // console.log('props', this.props);
   }
 
   componentDidMount() {
@@ -228,8 +228,19 @@ export default class Contact extends React.Component {
             />
           </View>
           <View style={styles.fullNameContainer}>
-            <Text style={styles.firstName}>{this.state.contact.first_name}</Text>
-            <Text style={styles.lastName}>{this.state.contact.last_name}</Text>
+            <Text style={styles.firstName}>
+              {/* {console.log('state first_name', this.state.contact.first_name)}
+              {console.log('state given_name', this.state.contact.given_name)}
+              {console.log('state in contact component', this.state)} */}
+              {this.state.contact.first_name
+                ? this.state.contact.first_name
+                : this.state.contact.given_name}
+            </Text>
+            <Text style={styles.lastName}>
+              {this.state.contact.last_name
+                ? this.state.contact.last_name
+                : this.state.contact.family_name}
+            </Text>
           </View>
           <View style={styles.iconsContainer}>
             <View style={styles.unfriendContainer}>
@@ -293,12 +304,8 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     flex: 1.5,
   },
-  firstName: {
-    // Define your name text styles here
-  },
-  lastName: {
-    // Define your name text styles here
-  },
+  firstName: {},
+  lastName: {},
   iconsContainer: {
     flexDirection: 'row',
     flex: 1,

@@ -13,11 +13,12 @@ import SignUpScreen from './screens/signUpScreen';
 import LoginScreen from './screens/loginScreen';
 import ContactScreen from './screens/contactScreen';
 import ChatScreen from './screens/chatScreen';
-import ProfileScreen from './screens/profileScreen';
+import UserProfileScreen from './screens/userProfileScreen';
 import SettingsScreen from './screens/settingsScreen';
 import UpdateProfileScreen from './screens/updateProfileScreen';
 import AddContactScreen from './screens/addContactScreen';
 import CameraScreen from './screens/cameraScreen';
+import ContactProfileScreen from './screens/contactProfileScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -62,6 +63,7 @@ function ContactStackNavigation() {
   return (
     <ContactStack.Navigator screenOptions={{ headerShown: false }}>
       <ContactStack.Screen name="Contacts" component={ContactScreen} />
+      <ContactStack.Screen name="ContactProfileScreen" component={ContactProfileScreen} />
       <ContactStack.Screen name="AddContactScreen" component={AddContactScreen} />
     </ContactStack.Navigator>
   );
@@ -70,7 +72,7 @@ function ContactStackNavigation() {
 function ProfileStackNavigation() {
   return (
     <ProfileStack.Navigator screenOptions={{ headerShown: false }}>
-      <ProfileStack.Screen name="Profile" component={ProfileScreen} />
+      <ProfileStack.Screen name="UserProfile" component={UserProfileScreen} />
       <ProfileStack.Screen name="UpdateProfileScreen" component={UpdateProfileScreen} />
       <ProfileStack.Screen name="CameraFunc" component={CameraScreen} />
     </ProfileStack.Navigator>
@@ -82,8 +84,8 @@ export default class App extends Component {
     return (
       <NavigationContainer>
         <AuthStack.Navigator screenOptions={{ headerShown: false }}>
-          <AuthStack.Screen name="SignUp" component={SignUpScreen} />
           <AuthStack.Screen name="Login" component={LoginScreen} />
+          <AuthStack.Screen name="SignUp" component={SignUpScreen} />
           <AuthStack.Screen name="MainAppNavigation" component={MainAppNavigation} />
         </AuthStack.Navigator>
       </NavigationContainer>

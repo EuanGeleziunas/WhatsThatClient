@@ -4,9 +4,10 @@
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { ActivityIndicator, View, Text, FlatList } from 'react-native';
-import BrandButton from '../components/brandButton';
+import { ActivityIndicator, View, Text, FlatList, StyleSheet } from 'react-native';
+// import BrandButton from '../components/brandButton';
 import Contact from '../components/contact';
+import { brandStyles } from '../src/styles/brandStyles';
 
 export default class AddContactScreen extends Component {
   constructor(props) {
@@ -55,6 +56,7 @@ export default class AddContactScreen extends Component {
       } else if (response.status === 500) {
         this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
       }
+      console.log(this.state.error);
       return json;
     } finally {
       this.setState.isLoading = false;
@@ -104,10 +106,6 @@ export default class AddContactScreen extends Component {
         this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
       }
 
-      // this.setState({
-      //   users: json,
-      // });
-
       const currentContacts = await this.getContactsRequest();
       const currentBlockedUsers = await this.getBlockedUsersRequest();
 
@@ -136,13 +134,12 @@ export default class AddContactScreen extends Component {
       );
     } else {
       return (
-        <View>
-          <Text>Contact Screen</Text>
-          <Text>{this.state.error}</Text>
-          <BrandButton
-            text="Add contact"
-            onPress={() => this.props.navigation.navigate('AddContactScreen')}
-          />
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>WhatsThat</Text>
+            <Text style={styles.subTitle}>All Users</Text>
+          </View>
+          {console.log('Users passed', this.state.users)}
           <FlatList
             data={this.state.users}
             renderItem={({ item }) => (
@@ -154,3 +151,28 @@ export default class AddContactScreen extends Component {
     }
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: brandStyles.whiteSmoke,
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+  },
+  titleContainer: {
+    flexBasis: '15%',
+    justifyContent: 'center',
+  },
+  title: {
+    color: brandStyles.orange,
+    fontSize: 25,
+  },
+  subTitle: {
+    color: brandStyles.orange,
+    fontSize: 18,
+  },
+  buttonsContainer: {
+    flexBasis: '15%',
+    justifyContent: 'space-evenly',
+  },
+});

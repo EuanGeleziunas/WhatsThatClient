@@ -7,7 +7,7 @@ import { View, Image, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from '../components/brandButton';
 
-export default class ProfileScreen extends Component {
+export default class UserProfileScreen extends Component {
   constructor(props) {
     super(props);
 

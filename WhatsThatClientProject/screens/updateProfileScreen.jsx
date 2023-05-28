@@ -116,7 +116,7 @@ export default class UpdateProfileScreen extends Component {
       <View style={styles.container}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>WhatsThat</Text>
-          <Text style={styles.subTitle}>Profile</Text>
+          <Text style={styles.subTitle}>Update Profile</Text>
         </View>
 
         <View style={styles.contentsContainer}>
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 200,
     height: 200,
+    borderRadius: 10,
   },
   updatePhotoContainer: {
     marginTop: 10,
