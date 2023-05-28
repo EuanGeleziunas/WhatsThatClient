@@ -2,9 +2,10 @@
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import { View, Text, ActivityIndicator, FlatList } from 'react-native';
+import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
 import BrandButton from '../components/brandButton';
 import Contact from '../components/contact';
+import { brandStyles } from '../src/styles/brandStyles';
 
 export default class ContactScreen extends Component {
   constructor(props) {
@@ -61,6 +62,7 @@ export default class ContactScreen extends Component {
     } finally {
       this.setState.isLoading = false;
       this.setState.refresh = !this.state.refresh;
+      console.log(this.state.error);
     }
   };
 
@@ -74,13 +76,21 @@ export default class ContactScreen extends Component {
       );
     } else {
       return (
-        <View>
-          <Text>Contact Screen</Text>
-          <Text>{this.state.error}</Text>
-          <BrandButton
-            text="Add contact"
-            onPress={() => this.props.navigation.navigate('AddContactScreen')}
-          />
+        <View style={styles.container}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>WhatsThat</Text>
+            <Text style={styles.subTitle}>Contacts</Text>
+          </View>
+          <View style={styles.buttonsContainer}>
+            <BrandButton
+              text="Add contact"
+              onPress={() => this.props.navigation.navigate('AddContactScreen')}
+            />
+            <BrandButton
+              text="Blocked users"
+              onPress={() => this.props.navigation.navigate('AddContactScreen')}
+            />
+          </View>
           <FlatList
             data={this.state.contacts}
             renderItem={({ item }) => (
@@ -97,3 +107,28 @@ export default class ContactScreen extends Component {
     }
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: brandStyles.whiteSmoke,
+    flex: 1,
+    paddingVertical: 10,
+    paddingHorizontal: 40,
+  },
+  titleContainer: {
+    flexBasis: '15%',
+    justifyContent: 'center',
+  },
+  title: {
+    color: brandStyles.orange,
+    fontSize: 25,
+  },
+  subTitle: {
+    color: brandStyles.orange,
+    fontSize: 18,
+  },
+  buttonsContainer: {
+    flexBasis: '15%',
+    justifyContent: 'space-evenly',
+  },
+});

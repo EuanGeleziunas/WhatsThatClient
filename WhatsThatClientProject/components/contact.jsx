@@ -1,7 +1,9 @@
 /* eslint-disable react/destructuring-assignment */
 import React from 'react';
-import { StyleSheet, Text, View, Button, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { brandStyles } from '../src/styles/brandStyles';
 
 export default class Contact extends React.Component {
@@ -9,6 +11,7 @@ export default class Contact extends React.Component {
     super(props);
     this.state = {
       contact: props.contact,
+      contactUserId: props.contact.user_id,
       isBlocked: props.isBlocked,
       isFriend: props.isFriend,
       isLoading: false,
@@ -16,6 +19,10 @@ export default class Contact extends React.Component {
     };
 
     console.log('props', this.props);
+  }
+
+  componentDidMount() {
+    this.getProfilePhotoRequest();
   }
 
   onUnBlockPressButton = async () => {
@@ -49,6 +56,30 @@ export default class Contact extends React.Component {
     }
   };
 
+  getProfilePhotoRequest = async () => {
+    try {
+      const id = this.state.contactUserId;
+      fetch(`http://localhost:3333/api/1.0.0/user/${id}/photo`, {
+        method: 'GET',
+        headers: {
+          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
+        },
+      })
+        .then((response) => response.blob())
+        .then((responseBlob) => {
+          const data = URL.createObjectURL(responseBlob);
+          this.setState({
+            photo: data,
+            isLoading: false,
+          });
+        });
+    } catch (error) {
+      this.setState({
+        // error: 'Failed to fetch profile data.',
+      });
+    }
+  };
+
   unBlockContactRequest = async () => {
     try {
       this.setState({ isLoading: true });
@@ -76,6 +107,7 @@ export default class Contact extends React.Component {
       } else if (response.status === 500) {
         this.setState({ error: 'Something went wrong. Please try again.' });
       }
+      console.log(this.state.error);
     } finally {
       this.setState({ isLoading: false });
     }
@@ -186,22 +218,59 @@ export default class Contact extends React.Component {
       );
     } else {
       return (
-        <View style={styles.contact}>
-          <Text>{this.state.error}</Text>
-          <View style={styles.contactImage} />
-          <Text style={styles.contactName}>
-            {this.state.contact.first_name ?? this.state.contact.given_name}
-          </Text>
-          {this.state.isBlocked ? (
-            <Button title="UnBlock" onPress={this.onUnBlockPressButton} />
-          ) : (
-            <Button title="Block" onPress={this.onBlockPressButton} />
-          )}
-          {this.state.isFriend ? (
-            <Button title="UnFriend" onPress={this.onUnFriendPressButton} />
-          ) : (
-            <Button title="Add friend" onPress={this.onAddFriendPressButton} />
-          )}
+        <View style={styles.contactContainer}>
+          <View style={styles.pictureContainer}>
+            <Image
+              source={{
+                uri: this.state.photo,
+              }}
+              style={styles.picture}
+            />
+          </View>
+          <View style={styles.fullNameContainer}>
+            <Text style={styles.firstName}>{this.state.contact.first_name}</Text>
+            <Text style={styles.lastName}>{this.state.contact.last_name}</Text>
+          </View>
+          <View style={styles.iconsContainer}>
+            <View style={styles.unfriendContainer}>
+              <TouchableOpacity>
+                {this.state.isFriend ? (
+                  <Ionicons
+                    name="ios-person-remove-outline"
+                    color={brandStyles.orange}
+                    onPress={this.onUnFriendPressButton}
+                    size="200%"
+                  />
+                ) : (
+                  <Ionicons
+                    name="ios-person-add-outline"
+                    color={brandStyles.orange}
+                    onPress={this.onAddFriendPressButton}
+                    size="200%"
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+            <View style={styles.blockContainer}>
+              <TouchableOpacity>
+                {this.state.isBlocked ? (
+                  <MaterialIcons
+                    name="block"
+                    color={brandStyles.orange}
+                    onPress={this.onUnBlockPressButton}
+                    size="200%"
+                  />
+                ) : (
+                  <MaterialIcons
+                    name="block"
+                    color={brandStyles.orange}
+                    onPress={this.onBlockPressButton}
+                    size="200%"
+                  />
+                )}
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       );
     }
@@ -209,28 +278,38 @@ export default class Contact extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  errorContainer: {
-    width: '100%',
+  contactContainer: {
     flexDirection: 'row',
+    marginBottom: 5,
+  },
+  pictureContainer: {},
+  picture: {
+    borderRadius: 10,
+    height: 75,
+    width: 75,
+  },
+  fullNameContainer: {
     justifyContent: 'center',
+    paddingLeft: 5,
+    flex: 1.5,
+  },
+  firstName: {
+    // Define your name text styles here
+  },
+  lastName: {
+    // Define your name text styles here
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: brandStyles.red,
-    backgroundColor: brandStyles.pink,
-    paddingVertical: 10,
-    paddingHorizontal: brandStyles.textInputPadding,
   },
-  errorIcon: {
-    color: brandStyles.red,
-    fontSize: 16,
-    textTransform: 'uppercase',
-    marginRight: 5,
+  unfriendContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
-  errorText: {
-    color: brandStyles.red,
-    fontSize: 16,
-    textTransform: 'uppercase',
-    marginLeft: 5,
+  blockContainer: {
+    flex: 1,
+    alignItems: 'center',
   },
 });

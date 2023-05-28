@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
   },
   profileImage: {
     alignSelf: 'center',
+    borderRadius: 10,
     width: 200,
     height: 200,
   },
