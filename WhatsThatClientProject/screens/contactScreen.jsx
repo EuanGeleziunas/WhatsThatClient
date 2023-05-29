@@ -93,25 +93,30 @@ export default class ContactScreen extends Component {
               onPress={() => this.props.navigation.navigate('BlockedListScreen')}
             />
           </View>
-          {console.log('contacts', this.state.contacts)}
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={this.state.contacts}
-            renderItem={({ item }) => (
-              <ContactListItem
-                userId={item.user_id}
-                firstName={item.first_name}
-                lastName={item.last_name}
-                onPress={() =>
-                  this.props.navigation.navigate('ContactProfileScreen', {
-                    data: {
-                      userId: item.user_id,
-                    },
-                  })
-                }
-              />
-            )}
-          />
+          {this.state.contacts === null || this.state.contacts.length === 0 ? (
+            <View style={styles.noContactsContainer}>
+              <Text style={styles.noContactsText}>You currently have no contacts.</Text>
+            </View>
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={this.state.contacts}
+              renderItem={({ item }) => (
+                <ContactListItem
+                  userId={item.user_id}
+                  firstName={item.first_name}
+                  lastName={item.last_name}
+                  onPress={() =>
+                    this.props.navigation.navigate('ContactProfileScreen', {
+                      data: {
+                        userId: item.user_id,
+                      },
+                    })
+                  }
+                />
+              )}
+            />
+          )}
         </View>
       );
     }

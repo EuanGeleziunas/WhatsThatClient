@@ -207,6 +207,7 @@ export default class ContactProfileScreen extends Component {
           'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
         },
       });
+      console.log('Response', response);
 
       if (response.status === 200) {
         // this.setState({ isBlocked: true });

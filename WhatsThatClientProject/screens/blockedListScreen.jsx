@@ -83,34 +83,30 @@ export default class BlockedListScreen extends Component {
             <Text style={styles.title}>WhatsThat</Text>
             <Text style={styles.subTitle}>Blocked Users</Text>
           </View>
-          {/* <View style={styles.buttonsContainer}>
-            <BrandButton
-              text="Add contact"
-              onPress={() => this.props.navigation.navigate('AddContactScreen')}
+          {console.log('Blocked users', this.state.blockedUsers)}
+          {this.state.blockedUsers === null || this.state.blockedUsers.length === 0 ? (
+            <View style={styles.noBlockedUsersContainer}>
+              <Text style={styles.noBlockedUsersText}>You currently have no blocked users.</Text>
+            </View>
+          ) : (
+            <FlatList
+              data={this.state.blockedUsers}
+              renderItem={({ item }) => (
+                <ContactListItem
+                  userId={item.user_id}
+                  firstName={item.first_name}
+                  lastName={item.last_name}
+                  onPress={() =>
+                    this.props.navigation.navigate('ContactProfileScreen', {
+                      data: {
+                        userId: item.user_id,
+                      },
+                    })
+                  }
+                />
+              )}
             />
-            <BrandButton
-              text="Blocked users"
-              onPress={() => this.props.navigation.navigate('BlockedListScreen')}
-            />
-          </View> */}
-          {console.log('contacts', this.state.contacts)}
-          <FlatList
-            data={this.state.blockedUsers}
-            renderItem={({ item }) => (
-              <ContactListItem
-                userId={item.user_id}
-                firstName={item.first_name}
-                lastName={item.last_name}
-                onPress={() =>
-                  this.props.navigation.navigate('ContactProfileScreen', {
-                    data: {
-                      userId: item.user_id,
-                    },
-                  })
-                }
-              />
-            )}
-          />
+          )}
         </View>
       );
     }
