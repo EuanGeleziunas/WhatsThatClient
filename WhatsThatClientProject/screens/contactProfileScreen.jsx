@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
@@ -12,27 +13,30 @@ export default class ContactProfileScreen extends Component {
     super(props);
 
     this.state = {
-      userId: '',
+      contactId: '',
       firstName: '',
       lastName: '',
       email: '',
       photo: '',
       isLoading: true,
+      isContactAdded: false,
+      isContactBlocked: false,
     };
 
     // this.onUnfriendButtonPress = this.onUnfriendButtonPress.bind(this);
   }
 
   componentDidMount() {
-    this.setState({ userId: this.props.route.params.data.userId }, () => {
+    this.setState({ contactId: this.props.route.params.data.userId }, () => {
       this.getUserRequest();
       this.getProfilePhotoRequest();
+      this.checkContactRelationship();
     });
   }
 
   getUserRequest = async () => {
     try {
-      const id = this.state.userId;
+      const id = this.state.contactId;
       const response = await fetch(`http://localhost:3333/api/1.0.0/user/${id}`, {
         headers: {
           'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
@@ -53,9 +57,68 @@ export default class ContactProfileScreen extends Component {
     }
   };
 
+  checkContactRelationship = async () => {
+    const contactId = this.state.contactId;
+    console.log('ContactId: ', contactId);
+    try {
+      this.setState.isLoading = true;
+      const response = await fetch('http://localhost:3333/api/1.0.0/contacts', {
+        headers: {
+          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
+        },
+      });
+      let jsonContacts = null;
+
+      if (response.status === 200) {
+        jsonContacts = await response.json();
+
+        this.setState({
+          isContactAdded: jsonContacts.some((contact) => contact.user_id === contactId),
+        });
+        console.log('IsContactAdded', this.state.isContactAdded);
+      } else if (response.status === 401) {
+        // this.setState({ error: 'Unauthorised.' }, () => {});
+      } else if (response.status === 500) {
+        // this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
+      }
+    } finally {
+      // this.setState.isLoading = false;
+      // this.setState.refresh = !this.state.refresh;
+      // console.log(this.state.error);
+    }
+
+    try {
+      this.setState.isLoading = true;
+      const response = await fetch('http://localhost:3333/api/1.0.0/blocked', {
+        headers: {
+          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
+        },
+      });
+      let jsonBlockedUsers = null;
+
+      if (response.status === 200) {
+        jsonBlockedUsers = await response.json();
+        console.log('json returned:', jsonBlockedUsers);
+
+        this.setState({
+          isContactBlocked: jsonBlockedUsers.some((contact) => contact.user_id === contactId),
+        });
+        console.log('IsContactBlocked', this.state.isContactBlocked);
+      } else if (response.status === 401) {
+        // this.setState({ error: 'Unauthorised.' }, () => {});
+      } else if (response.status === 500) {
+        // this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
+      }
+    } finally {
+      // this.setState.isLoading = false;
+      // this.setState.refresh = !this.state.refresh;
+      // console.log(this.state.error);
+    }
+  };
+
   getProfilePhotoRequest = async () => {
     try {
-      const id = this.state.userId;
+      const id = this.state.contactId;
       fetch(`http://localhost:3333/api/1.0.0/user/${id}/photo`, {
         method: 'GET',
         headers: {
@@ -77,9 +140,39 @@ export default class ContactProfileScreen extends Component {
     }
   };
 
+  addContactRequest = async () => {
+    try {
+      const id = this.state.contactId;
+      this.setState({ isLoading: true });
+      const response = await fetch(`http://localhost:3333/api/1.0.0/user/${id}/contact`, {
+        method: 'POST',
+        headers: {
+          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
+        },
+      });
+
+      if (response.status === 200) {
+        // this.setState({ isBlocked: true });
+        if (this.props.onClick) {
+          this.props.onClick();
+        }
+      } else if (response.status === 400) {
+        // this.setState({ error: 'You can not block yourself.' });
+      } else if (response.status === 401) {
+        // this.setState({ error: 'Unauthorised' });
+      } else if (response.status === 404) {
+        // this.setState({ error: 'User not found.' });
+      } else if (response.status === 500) {
+        // this.setState({ error: 'Something went wrong. Please try again.' });
+      }
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
   deleteContactRequest = async () => {
     try {
-      const id = this.state.userId;
+      const id = this.state.contactId;
       const response = await fetch(`http://localhost:3333/api/1.0.0/user/${id}/contact`, {
         method: 'DELETE',
         headers: {
@@ -108,7 +201,7 @@ export default class ContactProfileScreen extends Component {
 
   blockContactRequest = async () => {
     try {
-      const id = this.state.userId;
+      const id = this.state.contactId;
       this.setState({ isLoading: true });
       const response = await fetch(`http://localhost:3333/api/1.0.0/user/${id}/block`, {
         method: 'POST',
@@ -136,6 +229,35 @@ export default class ContactProfileScreen extends Component {
     }
   };
 
+  unblockContactRequest = async () => {
+    try {
+      const id = this.state.contactId;
+      const response = await fetch(`http://localhost:3333/api/1.0.0/user/${id}/block`, {
+        method: 'DELETE',
+        headers: {
+          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
+        },
+      });
+
+      if (response.status === 200) {
+        // this.setState({ isFriend: false });
+        if (this.props.onClick) {
+          this.props.onClick();
+        }
+      } else if (response.status === 400) {
+        // this.setState({ error: 'You can not unFriend yourself.' });
+      } else if (response.status === 401) {
+        // this.setState({ error: 'Unauthorised' });
+      } else if (response.status === 404) {
+        // this.setState({ error: 'User not found.' });
+      } else if (response.status === 500) {
+        // this.setState({ error: 'Something went wrong. Please try again.' });
+      }
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -148,7 +270,7 @@ export default class ContactProfileScreen extends Component {
         <View style={styles.container}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>WhatsThat</Text>
-            <Text style={styles.subTitle}>Update Profile</Text>
+            <Text style={styles.subTitle}>Contact Profile</Text>
           </View>
 
           <View style={styles.contentsContainer}>
@@ -169,16 +291,36 @@ export default class ContactProfileScreen extends Component {
             </View>
           </View>
           <View style={styles.buttonsContainer}>
-            <BrandButton
-              text={`Unfriend ${this.state.firstName}`}
-              onPress={() =>
-                this.props.navigation.navigate('Contacts', this.deleteContactRequest())
-              }
-            />
-            <BrandButton
-              text={`Block ${this.state.firstName}`}
-              onPress={() => this.props.navigation.navigate('Contacts', this.blockContactRequest())}
-            />
+            {this.state.isContactAdded ? (
+              <BrandButton
+                text={`Delete ${this.state.firstName}`}
+                onPress={() =>
+                  this.props.navigation.navigate('BlockedListScreen', this.deleteContactRequest())
+                }
+              />
+            ) : (
+              <BrandButton
+                text={`Add ${this.state.firstName}`}
+                onPress={() =>
+                  this.props.navigation.navigate('BlockedListScreen', this.addContactRequest())
+                }
+              />
+            )}
+            {this.state.isContactBlocked ? (
+              <BrandButton
+                text={`Unblock ${this.state.firstName}`}
+                onPress={() =>
+                  this.props.navigation.navigate('BlockedListScreen', this.unblockContactRequest())
+                }
+              />
+            ) : (
+              <BrandButton
+                text={`Block ${this.state.firstName}`}
+                onPress={() =>
+                  this.props.navigation.navigate('BlockedListScreen', this.blockContactRequest())
+                }
+              />
+            )}
           </View>
         </View>
       );

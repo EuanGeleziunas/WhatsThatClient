@@ -19,6 +19,7 @@ import UpdateProfileScreen from './screens/updateProfileScreen';
 import AddContactScreen from './screens/addContactScreen';
 import CameraScreen from './screens/cameraScreen';
 import ContactProfileScreen from './screens/contactProfileScreen';
+import BlockedListScreen from './screens/blockedListScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -65,6 +66,7 @@ function ContactStackNavigation() {
       <ContactStack.Screen name="Contacts" component={ContactScreen} />
       <ContactStack.Screen name="ContactProfileScreen" component={ContactProfileScreen} />
       <ContactStack.Screen name="AddContactScreen" component={AddContactScreen} />
+      <ContactStack.Screen name="BlockedListScreen" component={BlockedListScreen} />
     </ContactStack.Navigator>
   );
 }
