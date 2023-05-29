@@ -20,10 +20,12 @@ import AddContactScreen from './screens/addContactScreen';
 import CameraScreen from './screens/cameraScreen';
 import ContactProfileScreen from './screens/contactProfileScreen';
 import BlockedListScreen from './screens/blockedListScreen';
+import NewChatScreen from './screens/newChatScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 const ContactStack = createNativeStackNavigator();
+const ChatStack = createNativeStackNavigator();
 const ProfileStack = createNativeStackNavigator();
 
 function MainAppNavigation() {
@@ -53,7 +55,7 @@ function MainAppNavigation() {
       initialRouteName="Profile"
     >
       <Tab.Screen name="Contacts" component={ContactStackNavigation} />
-      <Tab.Screen name="Chats" component={ChatScreen} />
+      <Tab.Screen name="Chats" component={ChatStackNavigation} />
       <Tab.Screen name="Profile" component={ProfileStackNavigation} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
@@ -63,11 +65,20 @@ function MainAppNavigation() {
 function ContactStackNavigation() {
   return (
     <ContactStack.Navigator screenOptions={{ headerShown: false }}>
-      <ContactStack.Screen name="Contacts" component={ContactScreen} />
+      <ContactStack.Screen name="ContactsHomeScreen" component={ContactScreen} />
       <ContactStack.Screen name="ContactProfileScreen" component={ContactProfileScreen} />
       <ContactStack.Screen name="AddContactScreen" component={AddContactScreen} />
       <ContactStack.Screen name="BlockedListScreen" component={BlockedListScreen} />
     </ContactStack.Navigator>
+  );
+}
+
+function ChatStackNavigation() {
+  return (
+    <ChatStack.Navigator screenOptions={{ headerShown: false }}>
+      <ChatStack.Screen name="ChatsHomeScreen" component={ChatScreen} />
+      <ChatStack.Screen name="NewChatScreen" component={NewChatScreen} />
+    </ChatStack.Navigator>
   );
 }
 

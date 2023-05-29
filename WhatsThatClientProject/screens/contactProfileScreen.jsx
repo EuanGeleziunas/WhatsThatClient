@@ -294,13 +294,15 @@ export default class ContactProfileScreen extends Component {
               <BrandButton
                 text={`Delete ${this.state.firstName}`}
                 onPress={() =>
-                  this.props.navigation.navigate('Contacts', this.deleteContactRequest())
+                  this.props.navigation.navigate('ContactsHomeScreen', this.deleteContactRequest())
                 }
               />
             ) : (
               <BrandButton
                 text={`Add ${this.state.firstName}`}
-                onPress={() => this.props.navigation.navigate('Contacts', this.addContactRequest())}
+                onPress={() =>
+                  this.props.navigation.navigate('ContactsHomeScreen', this.addContactRequest())
+                }
               />
             )}
             {this.state.isContactBlocked ? (
