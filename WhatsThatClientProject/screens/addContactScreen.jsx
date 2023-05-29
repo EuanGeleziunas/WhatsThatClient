@@ -1,3 +1,4 @@
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable no-param-reassign */
 /* eslint-disable react/destructuring-assignment */
@@ -8,6 +9,7 @@ import { ActivityIndicator, View, Text, FlatList, StyleSheet } from 'react-nativ
 // import BrandButton from '../components/brandButton';
 import Contact from '../components/contact';
 import { brandStyles } from '../src/styles/brandStyles';
+import ContactListItem from '../components/contactListItem';
 
 export default class AddContactScreen extends Component {
   constructor(props) {
@@ -141,9 +143,22 @@ export default class AddContactScreen extends Component {
           </View>
           {console.log('Users passed', this.state.users)}
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={this.state.users}
             renderItem={({ item }) => (
-              <Contact contact={item} isBlocked={item.isBlocked} isFriend={item.isFriend} />
+              <ContactListItem
+                userId={item.user_id}
+                firstName={item.given_name}
+                lastName={item.family_name}
+                includeAddAndBlockIcons
+                onPress={() =>
+                  this.props.navigation.navigate('ContactProfileScreen', {
+                    data: {
+                      userId: item.user_id,
+                    },
+                  })
+                }
+              />
             )}
           />
         </View>

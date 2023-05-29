@@ -22,8 +22,6 @@ export default class ContactProfileScreen extends Component {
       isContactAdded: false,
       isContactBlocked: false,
     };
-
-    // this.onUnfriendButtonPress = this.onUnfriendButtonPress.bind(this);
   }
 
   componentDidMount() {
@@ -295,15 +293,13 @@ export default class ContactProfileScreen extends Component {
               <BrandButton
                 text={`Delete ${this.state.firstName}`}
                 onPress={() =>
-                  this.props.navigation.navigate('BlockedListScreen', this.deleteContactRequest())
+                  this.props.navigation.navigate('Contacts', this.deleteContactRequest())
                 }
               />
             ) : (
               <BrandButton
                 text={`Add ${this.state.firstName}`}
-                onPress={() =>
-                  this.props.navigation.navigate('BlockedListScreen', this.addContactRequest())
-                }
+                onPress={() => this.props.navigation.navigate('Contacts', this.addContactRequest())}
               />
             )}
             {this.state.isContactBlocked ? (

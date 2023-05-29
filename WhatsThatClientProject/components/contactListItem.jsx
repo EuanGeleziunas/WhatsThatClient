@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { brandStyles } from '../src/styles/brandStyles';
 
 export default class ContactListItem extends React.Component {
@@ -37,7 +39,7 @@ export default class ContactListItem extends React.Component {
   };
 
   render() {
-    const { firstName, lastName, onPress } = this.props;
+    const { firstName, lastName, includeAddAndBlockIcons, onPress } = this.props;
     const { profilePictureUri } = this.state;
     return (
       <TouchableOpacity onPress={onPress}>
@@ -54,6 +56,30 @@ export default class ContactListItem extends React.Component {
             <Text style={styles.firstName}>{firstName}</Text>
             <Text style={styles.lastName}>{lastName}</Text>
           </View>
+          {includeAddAndBlockIcons && (
+            <View style={styles.iconsContainer}>
+              <View style={styles.contactIconContainer}>
+                <TouchableOpacity>
+                  <Ionicons
+                    name="ios-person-remove-outline"
+                    color={brandStyles.orange}
+                    onPress={this.onUnFriendPressButton}
+                    size="200%"
+                  />
+                </TouchableOpacity>
+              </View>
+              <View style={styles.blockIconContainer}>
+                <TouchableOpacity>
+                  <MaterialIcons
+                    name="block"
+                    color={brandStyles.orange}
+                    onPress={this.onUnBlockPressButton}
+                    size="200%"
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
         </View>
         <View style={styles.separator} />
       </TouchableOpacity>
@@ -84,6 +110,18 @@ const styles = StyleSheet.create({
   },
   lastName: {
     fontSize: 18,
+  },
+  iconsContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  contactIconContainer: {
+    alignItems: 'center',
+  },
+  blockIconContainer: {
+    alignItems: 'center',
   },
   separator: {
     borderBottomColor: brandStyles.lightOrange,
