@@ -95,6 +95,7 @@ export default class ContactScreen extends Component {
           </View>
           {console.log('contacts', this.state.contacts)}
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={this.state.contacts}
             renderItem={({ item }) => (
               <ContactListItem
