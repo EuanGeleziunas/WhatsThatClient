@@ -37,6 +37,15 @@ export default class SingleChatScreen extends Component {
       this.getSingleChatRequest();
       console.log('ChatId from single chat screen', this.state.chatId);
     });
+
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.getSingleChatRequest();
+    });
+  }
+
+  componentWillUnmount() {
+    // Clean up the listener when the component is unmounted
+    this.focusListener();
   }
 
   getSingleChatRequest = async () => {
@@ -127,7 +136,7 @@ export default class SingleChatScreen extends Component {
         <View style={styles.chatWindowContainer}>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={this.state.chatMessages.reverse()}
+            data={this.state.chatMessages ? this.state.chatMessages.reverse() : []}
             renderItem={({ item }) => {
               return (
                 <ChatMessage
@@ -137,6 +146,7 @@ export default class SingleChatScreen extends Component {
                   onPress={() =>
                     this.props.navigation.navigate('MessageOptionsScreen', {
                       data: {
+                        chatId: this.state.chatId,
                         messageId: item.message_id,
                         message: item.message,
                       },
