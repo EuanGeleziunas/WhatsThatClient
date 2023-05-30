@@ -12,7 +12,6 @@ import { brandStyles } from './src/styles/brandStyles';
 import SignUpScreen from './screens/signUpScreen';
 import LoginScreen from './screens/loginScreen';
 import ContactScreen from './screens/contactScreen';
-import ChatScreen from './screens/chatScreen';
 import UserProfileScreen from './screens/userProfileScreen';
 import SettingsScreen from './screens/settingsScreen';
 import UpdateProfileScreen from './screens/updateProfileScreen';
@@ -21,6 +20,8 @@ import CameraScreen from './screens/cameraScreen';
 import ContactProfileScreen from './screens/contactProfileScreen';
 import BlockedListScreen from './screens/blockedListScreen';
 import NewChatScreen from './screens/newChatScreen';
+import ChatHomeScreen from './screens/chatHomeScreen';
+import SingleChatScreen from './screens/singleChatScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -76,8 +77,9 @@ function ContactStackNavigation() {
 function ChatStackNavigation() {
   return (
     <ChatStack.Navigator screenOptions={{ headerShown: false }}>
-      <ChatStack.Screen name="ChatsHomeScreen" component={ChatScreen} />
+      <ChatStack.Screen name="ChatsHomeScreen" component={ChatHomeScreen} />
       <ChatStack.Screen name="NewChatScreen" component={NewChatScreen} />
+      <ChatStack.Screen name="SingleChatScreen" component={SingleChatScreen} />
     </ChatStack.Navigator>
   );
 }

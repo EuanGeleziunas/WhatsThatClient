@@ -8,7 +8,7 @@ import { brandStyles } from '../src/styles/brandStyles';
 import BrandButton from '../components/brandButton';
 import ChatPreviewListItem from '../components/chatPreviewListItem';
 
-export default class ChatScreen extends Component {
+export default class ChatHomeScreen extends Component {
   constructor(props) {
     super(props);
 
@@ -106,9 +106,9 @@ export default class ChatScreen extends Component {
                   lastMessage={hasMessage ? item.last_message.message : ''}
                   lastMessageAuthor={hasMessage ? item.last_message.author.first_name : ''}
                   onPress={() =>
-                    this.props.navigation.navigate('ContactProfileScreen', {
+                    this.props.navigation.navigate('SingleChatScreen', {
                       data: {
-                        userId: item.user_id,
+                        chatId: item.chat_id,
                       },
                     })
                   }
