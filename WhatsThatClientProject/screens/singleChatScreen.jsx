@@ -142,13 +142,16 @@ export default class SingleChatScreen extends Component {
         </View>
         <View style={styles.chatWindowContainer}>
           <FlatList
+            inverted
             showsVerticalScrollIndicator={false}
-            data={this.state.chatMessages ? this.state.chatMessages.reverse() : []}
+            data={this.state.chatMessages ? this.state.chatMessages : []}
             renderItem={({ item }) => {
+              console.log('Item: ', item);
               return (
                 <ChatMessage
                   message={item.message}
                   timeStamp={item.timestamp}
+                  authorId={item.author.user_id}
                   messageAuthor={item.author.first_name}
                   onPress={() =>
                     this.props.navigation.navigate('MessageOptionsScreen', {
@@ -213,7 +216,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   newMessageInput: {
-    flex: 4,
+    flex: 1,
     backgroundColor: brandStyles.white,
     color: '#696969',
     borderRadius: 5,
@@ -221,7 +224,6 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   sendMessageIcon: {
-    flex: 1,
     alignSelf: 'center',
   },
 });

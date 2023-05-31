@@ -1,5 +1,7 @@
 export const brandStyles = {
   // Background color
+  black: '#000',
+  darkGray: '#292929',
   white: '#FFF',
   whiteSmoke: '#F5F5F5',
   orange: '#FC4C02',
