@@ -1,8 +1,10 @@
+/* eslint-disable react/destructuring-assignment */
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+// import Ionicons from 'react-native-vector-icons/Ionicons';
+// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { brandStyles } from '../src/styles/brandStyles';
 
 export default class ContactListItem extends React.Component {
@@ -39,7 +41,7 @@ export default class ContactListItem extends React.Component {
   };
 
   render() {
-    const { firstName, lastName, includeAddAndBlockIcons, onPress } = this.props;
+    const { firstName, lastName, removeUserIcon, onPress } = this.props;
     const { profilePictureUri } = this.state;
     return (
       <TouchableOpacity onPress={onPress}>
@@ -56,19 +58,19 @@ export default class ContactListItem extends React.Component {
             <Text style={styles.firstName}>{firstName}</Text>
             <Text style={styles.lastName}>{lastName}</Text>
           </View>
-          {includeAddAndBlockIcons && (
+          {removeUserIcon && (
             <View style={styles.iconsContainer}>
-              <View style={styles.contactIconContainer}>
+              <View style={styles.removeIconContainer}>
                 <TouchableOpacity>
-                  <Ionicons
-                    name="ios-person-remove-outline"
+                  <AntDesign
+                    name="deleteuser"
                     color={brandStyles.orange}
-                    onPress={this.onUnFriendPressButton}
+                    onPress={this.props.onRemoveUser}
                     size="200%"
                   />
                 </TouchableOpacity>
               </View>
-              <View style={styles.blockIconContainer}>
+              {/* <View style={styles.blockIconContainer}>
                 <TouchableOpacity>
                   <MaterialIcons
                     name="block"
@@ -77,7 +79,7 @@ export default class ContactListItem extends React.Component {
                     size="200%"
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </View>
           )}
         </View>
