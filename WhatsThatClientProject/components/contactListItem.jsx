@@ -41,7 +41,7 @@ export default class ContactListItem extends React.Component {
   };
 
   render() {
-    const { firstName, lastName, removeUserIcon, onPress } = this.props;
+    const { firstName, lastName, addUserIcon, removeUserIcon, onPress } = this.props;
     const { profilePictureUri } = this.state;
     return (
       <TouchableOpacity onPress={onPress}>
@@ -70,16 +70,20 @@ export default class ContactListItem extends React.Component {
                   />
                 </TouchableOpacity>
               </View>
-              {/* <View style={styles.blockIconContainer}>
+            </View>
+          )}
+          {addUserIcon && (
+            <View style={styles.iconsContainer}>
+              <View style={styles.addIconContainer}>
                 <TouchableOpacity>
-                  <MaterialIcons
-                    name="block"
+                  <AntDesign
+                    name="adduser"
                     color={brandStyles.orange}
-                    onPress={this.onUnBlockPressButton}
+                    onPress={this.props.onAddUser}
                     size="200%"
                   />
                 </TouchableOpacity>
-              </View> */}
+              </View>
             </View>
           )}
         </View>

@@ -171,10 +171,16 @@ export default class ChatSettingsScreen extends Component {
           <BrandButton text="Update Chat Name" onPress={this.updateChatNameRequest} />
         </View>
         <View style={styles.addUserButtonContainer}>
-          <BrandButton text="Add User" onPress={this.addUserRequest} />
-        </View>
-        <View style={styles.removeUserButtonContainer}>
-          <BrandButton text="Remove User" onPress={this.removeUserRequest} />
+          <BrandButton
+            text="Add User"
+            onPress={() =>
+              this.props.navigation.navigate('ChatAddUserScreen', {
+                data: {
+                  chatId: this.state.chatId,
+                },
+              })
+            }
+          />
         </View>
         <View style={styles.chatMembersContainer}>
           <Text style={styles.subTitle}>Chat Members</Text>

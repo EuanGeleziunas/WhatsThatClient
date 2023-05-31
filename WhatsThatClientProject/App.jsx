@@ -24,6 +24,7 @@ import ChatHomeScreen from './screens/chatHomeScreen';
 import SingleChatScreen from './screens/singleChatScreen';
 import ChatSettingsScreen from './screens/chatSettingsScreen';
 import MessageOptionsScreen from './screens/messageOptionsScreen';
+import ChatAddUserScreen from './screens/chatAddUserScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -84,6 +85,7 @@ function ChatStackNavigation() {
       <ChatStack.Screen name="SingleChatScreen" component={SingleChatScreen} />
       <ChatStack.Screen name="MessageOptionsScreen" component={MessageOptionsScreen} />
       <ChatStack.Screen name="ChatSettingsScreen" component={ChatSettingsScreen} />
+      <ChatStack.Screen name="ChatAddUserScreen" component={ChatAddUserScreen} />
     </ChatStack.Navigator>
   );
 }
