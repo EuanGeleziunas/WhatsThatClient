@@ -128,7 +128,14 @@ export default class SingleChatScreen extends Component {
           <Ionicons
             name="settings-outline"
             color={brandStyles.orange}
-            onPress={() => this.props.navigation.navigate('ChatSettingsScreen')}
+            onPress={() =>
+              this.props.navigation.navigate('ChatSettingsScreen', {
+                data: {
+                  chatId: this.state.chatId,
+                  chatName: this.state.chatName,
+                },
+              })
+            }
             size="200%"
             style={styles.settingsIcon}
           />
