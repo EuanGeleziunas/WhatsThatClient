@@ -4,8 +4,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, Image, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from '../components/brandButton';
+import { brandStyles } from '../../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
 
 export default class UserProfileScreen extends Component {
   constructor(props) {
@@ -16,7 +16,7 @@ export default class UserProfileScreen extends Component {
       lastName: '',
       email: '',
       photo: '',
-      // error: '',
+
       isLoading: true,
     };
     this.onLogoutPressButton = this.onLogoutPressButton.bind(this);

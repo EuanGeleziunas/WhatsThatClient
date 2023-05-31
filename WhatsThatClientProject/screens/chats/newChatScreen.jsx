@@ -3,8 +3,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, TextInput, Text, StyleSheet } from 'react-native';
-import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from '../components/brandButton';
+import { brandStyles } from '../../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
 
 export default class NewChatScreen extends Component {
   constructor(props) {
@@ -33,12 +33,6 @@ export default class NewChatScreen extends Component {
         if (response.status === 200) {
           return response.json();
         }
-        if (response.status === 400) {
-          // this.setState({ error: 'Account with this email already exists' }, () => {});
-        } else {
-          // this.setState({ error: 'Something went wrong. Please try again' }, () => {});
-        }
-
         throw response;
       })
       .then((responseJson) => {
@@ -119,6 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8E8E8',
     color: '#696969',
     paddingLeft: brandStyles.textInputPadding,
+    marginBottom: 20,
   },
   signInRedirectContainer: {
     marginTop: 20,

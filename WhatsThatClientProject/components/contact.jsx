@@ -17,8 +17,6 @@ export default class Contact extends React.Component {
       isLoading: false,
       error: '',
     };
-
-    // console.log('props', this.props);
   }
 
   componentDidMount() {
@@ -229,9 +227,6 @@ export default class Contact extends React.Component {
           </View>
           <View style={styles.fullNameContainer}>
             <Text style={styles.firstName}>
-              {/* {console.log('state first_name', this.state.contact.first_name)}
-              {console.log('state given_name', this.state.contact.given_name)}
-              {console.log('state in contact component', this.state)} */}
               {this.state.contact.first_name
                 ? this.state.contact.first_name
                 : this.state.contact.given_name}

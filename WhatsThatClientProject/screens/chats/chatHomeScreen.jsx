@@ -1,12 +1,14 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from '../components/brandButton';
-import ChatPreviewListItem from '../components/chatPreviewListItem';
+import { brandStyles } from '../../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
+import ChatPreviewListItem from '../../components/chatPreviewListItem';
+import { getChatsRequest } from '../../dataAccess/chatManagement/chatManagementRequests';
 
 export default class ChatHomeScreen extends Component {
   constructor(props) {
@@ -14,16 +16,13 @@ export default class ChatHomeScreen extends Component {
 
     this.state = {
       chats: [],
-      // error: '',
-      // isLoading: false,
-      // refresh: false,
     };
   }
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       if (this.checkLoggedIn()) {
-        this.getChatsRequest();
+        this.getChats();
       }
     });
   }
@@ -39,34 +38,28 @@ export default class ChatHomeScreen extends Component {
     }
   };
 
-  getChatsRequest = async () => {
+  getChats = async () => {
+    let chats = [];
+
     try {
       this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/chat', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
-      });
-      let json = null;
-
-      if (response.status === 200) {
-        json = await response.json();
-        console.log('ResponseJson: ', json);
-      } else if (response.status === 401) {
+      const response = await getChatsRequest();
+      chats = response.data;
+    } catch (error) {
+      if (error.status === 400) {
+        this.setState({ error: 'Bad request.' }, () => {});
+      } else if (error.status === 401) {
         this.setState({ error: 'Unauthorised.' }, () => {});
-      } else if (response.status === 500) {
+      } else if (error.status === 500) {
         this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
       }
-
-      this.setState({
-        chats: json,
-      });
-      console.log('Chats: ', this.state.chats);
     } finally {
       this.setState.isLoading = false;
       this.setState.refresh = !this.state.refresh;
-      console.log(this.state.error);
     }
+    this.setState({
+      chats,
+    });
   };
 
   render() {

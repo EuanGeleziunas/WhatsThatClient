@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, CameraType, onCameraReady, CameraPictureOptions } from 'expo-camera';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { uploadProfilePhotoRequest } from '../../dataAccess/userManagement/userManagementRequests';
 
 export default function CameraTakePicture({ navigation }) {
   const [type, setType] = useState(CameraType.back);
@@ -23,7 +24,7 @@ export default function CameraTakePicture({ navigation }) {
       const options = {
         quality: 0.5,
         base64: true,
-        onPictureSaved: (data) => uploadPhotoRequest(data),
+        onPictureSaved: (data) => uploadPhoto(data),
       };
       const data = await camera.takePictureAsync(options);
 
@@ -31,30 +32,20 @@ export default function CameraTakePicture({ navigation }) {
     }
   }
 
-  async function uploadPhotoRequest(data) {
-    const id = await AsyncStorage.getItem('userId');
-    const res = await fetch(data.uri);
-    const blob = await res.blob();
-
-    return fetch(`http://localhost:3333/api/1.0.0/user/${id}/photo`, {
-      method: 'POST',
-      headers: {
-        'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        'Content-Type': 'image/png',
-      },
-      body: blob,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          console.log('Picture added', response);
-          navigation.navigate('UserProfile');
-        } else {
-          console.log('error');
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  async function uploadPhoto(data) {
+    try {
+      await uploadProfilePhotoRequest(data);
+    } catch (error) {
+      if (error.status === 400) {
+        this.setState({ error: 'Bad request.' }, () => {});
+      } else if (error.status === 401) {
+        this.setState({ error: 'Unauthorised.' }, () => {});
+      } else if (error.status === 500) {
+        this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
+      }
+    } finally {
+      navigation.navigate('UserProfile');
+    }
   }
 
   if (!permission || !permission.granted) {

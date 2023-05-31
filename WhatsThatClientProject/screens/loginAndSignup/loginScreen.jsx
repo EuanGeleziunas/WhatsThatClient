@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from '../components/brandButton';
-import ErrorBox from '../components/errorBox';
+import { brandStyles } from '../../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
+import ErrorBox from '../../components/errorBox';
 
 class Login extends Component {
   constructor(props) {
@@ -13,13 +13,11 @@ class Login extends Component {
       email: '',
       password: '',
       error: '',
-      // submitted: false,
     };
     this.onPressButton = this.onPressButton.bind(this);
   }
 
   onPressButton() {
-    // this.setState({ submitted: true });
     this.setState({ error: '' });
 
     if (this.isFormValid()) {

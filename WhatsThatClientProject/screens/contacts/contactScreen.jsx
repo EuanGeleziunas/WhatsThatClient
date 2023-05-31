@@ -1,13 +1,15 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
-import BrandButton from '../components/brandButton';
-import Contact from '../components/contact';
-import ContactListItem from '../components/contactListItem';
-import { brandStyles } from '../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
+import Contact from '../../components/contact';
+import ContactListItem from '../../components/contactListItem';
+import { brandStyles } from '../../src/styles/brandStyles';
+import { getContactsRequest } from '../../dataAccess/contactsManagement/contactsManagementRequests';
 
 export default class ContactScreen extends Component {
   constructor(props) {
@@ -24,12 +26,12 @@ export default class ContactScreen extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       if (this.checkLoggedIn()) {
-        this.getContactsRequest();
+        this.getContacts();
       }
     });
 
     this.focusListener = this.props.navigation.addListener('focus', () => {
-      this.getContactsRequest();
+      this.getContacts();
     });
   }
 
@@ -45,32 +47,24 @@ export default class ContactScreen extends Component {
     }
   };
 
-  getContactsRequest = async () => {
+  getContacts = async () => {
+    let contacts = [];
     try {
       this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/contacts', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
-      });
-      let json = null;
+      const response = await getContactsRequest();
+      console.log('Contacts new request: ', response);
 
-      if (response.status === 200) {
-        json = await response.json();
-      } else if (response.status === 401) {
-        this.setState({ error: 'Unauthorised.' }, () => {});
-      } else if (response.status === 500) {
-        this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
-      }
-
-      this.setState({
-        contacts: json,
-      });
+      contacts = response.data;
+    } catch (error) {
+      this.setState({ error: error.toJSON() }, () => {});
+      console.log('error json: ', error.toJSON());
     } finally {
       this.setState.isLoading = false;
       this.setState.refresh = !this.state.refresh;
-      console.log(this.state.error);
     }
+    this.setState({
+      contacts,
+    });
   };
 
   render() {

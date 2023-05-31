@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 /* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable react/no-access-state-in-setstate */
 /* eslint-disable no-param-reassign */
@@ -6,10 +7,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { ActivityIndicator, View, Text, FlatList, StyleSheet } from 'react-native';
-// import BrandButton from '../components/brandButton';
-import Contact from '../components/contact';
-import { brandStyles } from '../src/styles/brandStyles';
-import ContactListItem from '../components/contactListItem';
+import Contact from '../../components/contact';
+import { brandStyles } from '../../src/styles/brandStyles';
+import ContactListItem from '../../components/contactListItem';
+import { searchUsersRequest } from '../../dataAccess/userManagement/userManagementRequests';
 
 export default class AddContactScreen extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ export default class AddContactScreen extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       if (this.checkLoggedIn()) {
-        this.searchUserRequest();
+        this.searchUsers();
       }
     });
   }
@@ -41,89 +42,30 @@ export default class AddContactScreen extends Component {
     }
   };
 
-  getContactsRequest = async () => {
+  searchUsers = async () => {
+    let users = [];
+    let response;
     try {
       this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/contacts', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
-      });
-      let json = [];
+      response = await searchUsersRequest();
+      console.log('Contacts new request: ', response);
 
-      if (response.status === 200) {
-        json = await response.json();
-      } else if (response.status === 401) {
-        this.setState({ error: 'Unauthorised.' }, () => {});
-      } else if (response.status === 500) {
-        this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
-      }
-      console.log(this.state.error);
-      return json;
-    } finally {
-      this.setState.isLoading = false;
-    }
-  };
-
-  getBlockedUsersRequest = async () => {
-    try {
-      this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/blocked', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
-      });
-      let json = [];
-
-      if (response.status === 200) {
-        json = await response.json();
-      } else if (response.status === 401) {
-        this.setState({ error: 'Unauthorised.' }, () => {});
-      } else if (response.status === 500) {
-        this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
-      }
-      return json;
-    } finally {
-      this.setState.isLoading = false;
-    }
-  };
-
-  searchUserRequest = async () => {
-    try {
-      this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/search', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
-      });
-      let json = [];
-
-      if (response.status === 200) {
-        json = await response.json();
-      } else if (response.status === 400) {
+      users = response.data;
+    } catch (error) {
+      if (response.status === 400) {
         this.setState({ error: 'Bad request.' }, () => {});
       } else if (response.status === 401) {
         this.setState({ error: 'Unauthorised.' }, () => {});
       } else if (response.status === 500) {
         this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
       }
-
-      const currentContacts = await this.getContactsRequest();
-      const currentBlockedUsers = await this.getBlockedUsersRequest();
-
-      const newUsers = json.map((u) => ({
-        ...u,
-        isBlocked: !!currentBlockedUsers.find((c) => c.user_id === u.user_id),
-        isFriend: !!currentContacts.find((c) => c.user_id === u.user_id),
-      }));
-      this.setState({ users: newUsers });
-
-      console.log('Users', newUsers);
-      console.log('Blocked users', currentBlockedUsers);
-      console.log('Current contacts', currentContacts);
     } finally {
       this.setState.isLoading = false;
+      this.setState.refresh = !this.state.refresh;
     }
+    this.setState({
+      users,
+    });
   };
 
   render() {

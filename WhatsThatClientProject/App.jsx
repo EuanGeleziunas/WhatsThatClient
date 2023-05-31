@@ -9,22 +9,21 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { brandStyles } from './src/styles/brandStyles';
 
-import SignUpScreen from './screens/signUpScreen';
-import LoginScreen from './screens/loginScreen';
-import ContactScreen from './screens/contactScreen';
-import UserProfileScreen from './screens/userProfileScreen';
-import SettingsScreen from './screens/settingsScreen';
-import UpdateProfileScreen from './screens/updateProfileScreen';
-import AddContactScreen from './screens/addContactScreen';
-import CameraScreen from './screens/cameraScreen';
-import ContactProfileScreen from './screens/contactProfileScreen';
-import BlockedListScreen from './screens/blockedListScreen';
-import NewChatScreen from './screens/newChatScreen';
-import ChatHomeScreen from './screens/chatHomeScreen';
-import SingleChatScreen from './screens/singleChatScreen';
-import ChatSettingsScreen from './screens/chatSettingsScreen';
-import MessageOptionsScreen from './screens/messageOptionsScreen';
-import ChatAddUserScreen from './screens/chatAddUserScreen';
+import SignUpScreen from './screens/loginAndSignup/signUpScreen';
+import LoginScreen from './screens/loginAndSignup/loginScreen';
+import ContactScreen from './screens/contacts/contactScreen';
+import UserProfileScreen from './screens/profile/userProfileScreen';
+import UpdateProfileScreen from './screens/profile/updateProfileScreen';
+import AddContactScreen from './screens/contacts/addContactScreen';
+import CameraScreen from './screens/profile/cameraScreen';
+import ContactProfileScreen from './screens/contacts/contactProfileScreen';
+import BlockedListScreen from './screens/contacts/blockedListScreen';
+import NewChatScreen from './screens/chats/newChatScreen';
+import ChatHomeScreen from './screens/chats/chatHomeScreen';
+import SingleChatScreen from './screens/chats/singleChatScreen';
+import ChatSettingsScreen from './screens/chats/chatSettingsScreen';
+import MessageOptionsScreen from './screens/chats/messageOptionsScreen';
+import ChatAddUserScreen from './screens/chats/chatAddUserScreen';
 
 const AuthStack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -46,8 +45,6 @@ function MainAppNavigation() {
             iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -61,7 +58,6 @@ function MainAppNavigation() {
       <Tab.Screen name="Contacts" component={ContactStackNavigation} />
       <Tab.Screen name="Chats" component={ChatStackNavigation} />
       <Tab.Screen name="Profile" component={ProfileStackNavigation} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
     </Tab.Navigator>
   );
 }

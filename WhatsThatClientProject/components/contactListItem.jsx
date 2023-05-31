@@ -3,8 +3,6 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-// import Ionicons from 'react-native-vector-icons/Ionicons';
-// import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { brandStyles } from '../src/styles/brandStyles';
 
 export default class ContactListItem extends React.Component {
@@ -34,9 +32,7 @@ export default class ContactListItem extends React.Component {
           this.setState({ profilePictureUri });
         });
     } catch (error) {
-      this.setState({
-        // error: 'Failed to fetch profile data.',
-      });
+      this.setState({});
     }
   };
 

@@ -5,8 +5,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, Image, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from '../components/brandButton';
+import { brandStyles } from '../../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
+import { getUserRequest } from '../../dataAccess/userManagement/userManagementRequests';
+import {
+  getContactsRequest,
+  getBlockedUsersRequest,
+} from '../../dataAccess/contactsManagement/contactsManagementRequests';
 
 export default class ContactProfileScreen extends Component {
   constructor(props) {
@@ -26,32 +31,28 @@ export default class ContactProfileScreen extends Component {
 
   componentDidMount() {
     this.setState({ contactId: this.props.route.params.data.userId }, () => {
-      this.getUserRequest();
+      this.getUser();
       this.getProfilePhotoRequest();
       this.checkContactRelationship();
     });
   }
 
-  getUserRequest = async () => {
+  getUser = async () => {
+    this.setState.isLoading = true;
+
     try {
       const id = this.state.contactId;
-      const response = await fetch(`http://localhost:3333/api/1.0.0/user/${id}`, {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
-      });
-      const json = await response.json();
+      const response = await getUserRequest(id);
 
       this.setState({
-        firstName: json.first_name,
-        lastName: json.last_name,
-        email: json.email,
-        isLoading: false,
+        firstName: response.data.first_name,
+        lastName: response.data.last_name,
+        email: response.data.email,
       });
     } catch (error) {
-      this.setState({
-        // error: 'Failed to fetch profile data.',
-      });
+      console.log('eerro');
+    } finally {
+      this.setState.isLoading = false;
     }
   };
 
@@ -60,25 +61,13 @@ export default class ContactProfileScreen extends Component {
     console.log('ContactId: ', contactId);
     try {
       this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/contacts', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
+      const response = await getContactsRequest();
+      const contacts = response.data;
+
+      this.setState({
+        isContactAdded: contacts.some((contact) => contact.user_id === contactId),
       });
-      let jsonContacts = null;
-
-      if (response.status === 200) {
-        jsonContacts = await response.json();
-
-        this.setState({
-          isContactAdded: jsonContacts.some((contact) => contact.user_id === contactId),
-        });
-        console.log('IsContactAdded', this.state.isContactAdded);
-      } else if (response.status === 401) {
-        // this.setState({ error: 'Unauthorised.' }, () => {});
-      } else if (response.status === 500) {
-        // this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
-      }
+      console.log('IsContactAdded', this.state.isContactAdded);
     } finally {
       // this.setState.isLoading = false;
       // this.setState.refresh = !this.state.refresh;
@@ -87,26 +76,14 @@ export default class ContactProfileScreen extends Component {
 
     try {
       this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/blocked', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
+      const response = await getBlockedUsersRequest();
+
+      const blockedUsers = response.data;
+
+      this.setState({
+        isContactBlocked: blockedUsers.some((contact) => contact.user_id === contactId),
       });
-      let jsonBlockedUsers = null;
-
-      if (response.status === 200) {
-        jsonBlockedUsers = await response.json();
-        console.log('json returned:', jsonBlockedUsers);
-
-        this.setState({
-          isContactBlocked: jsonBlockedUsers.some((contact) => contact.user_id === contactId),
-        });
-        console.log('IsContactBlocked', this.state.isContactBlocked);
-      } else if (response.status === 401) {
-        // this.setState({ error: 'Unauthorised.' }, () => {});
-      } else if (response.status === 500) {
-        // this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
-      }
+      console.log('IsContactBlocked', this.state.isContactBlocked);
     } finally {
       // this.setState.isLoading = false;
       // this.setState.refresh = !this.state.refresh;

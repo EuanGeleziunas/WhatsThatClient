@@ -3,13 +3,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
-// import BrandButton from '../components/brandButton';
-// import Contact from '../components/contact';
-// import ContactListItem from '../components/contactListItem';
-// import { brandStyles } from '../src/styles/brandStyles';
-
-import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from '../components/brandButton';
+import { brandStyles } from '../../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
 
 export default class MessageOptionsScreen extends Component {
   constructor(props) {
@@ -31,9 +26,7 @@ export default class MessageOptionsScreen extends Component {
         messageId: this.props.route.params.data.messageId,
         message: this.props.route.params.data.message,
       },
-      () => {
-        console.log('State: ', this.state);
-      },
+      () => {},
     );
   }
 
@@ -47,8 +40,6 @@ export default class MessageOptionsScreen extends Component {
     const chatId = this.state.chatId;
     const messageId = this.state.messageId;
 
-    console.log('data', data);
-
     return fetch(`http://localhost:3333/api/1.0.0/chat/${chatId}/message/${messageId}`, {
       method: 'PATCH',
       headers: {
@@ -59,14 +50,11 @@ export default class MessageOptionsScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log('Message updated');
           this.props.navigation.navigate('SingleChatScreen');
-        } else {
-          console.log('error');
         }
       })
       .catch((error) => {
-        console.log(error);
+        throw error;
       });
   };
 

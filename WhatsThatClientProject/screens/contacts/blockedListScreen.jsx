@@ -4,10 +4,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
 import { View, Text, ActivityIndicator, FlatList, StyleSheet } from 'react-native';
-import BrandButton from '../components/brandButton';
-import Contact from '../components/contact';
-import ContactListItem from '../components/contactListItem';
-import { brandStyles } from '../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
+import Contact from '../../components/contact';
+import ContactListItem from '../../components/contactListItem';
+import { brandStyles } from '../../src/styles/brandStyles';
+import { getBlockedUsersRequest } from '../../dataAccess/contactsManagement/contactsManagementRequests';
 
 export default class BlockedListScreen extends Component {
   constructor(props) {
@@ -15,7 +16,6 @@ export default class BlockedListScreen extends Component {
 
     this.state = {
       blockedUsers: [],
-      error: '',
       isLoading: false,
       refresh: false,
     };
@@ -23,11 +23,11 @@ export default class BlockedListScreen extends Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.getBlockedUsersRequest();
+      this.getBlockedUsers();
     });
 
     this.focusListener = this.props.navigation.addListener('focus', () => {
-      this.getBlockedUsersRequest();
+      this.getBlockedUsers();
     });
   }
 
@@ -36,32 +36,24 @@ export default class BlockedListScreen extends Component {
     this.focusListener();
   }
 
-  getBlockedUsersRequest = async () => {
+  getBlockedUsers = async () => {
+    let blockedUsers = [];
     try {
       this.setState.isLoading = true;
-      const response = await fetch('http://localhost:3333/api/1.0.0/blocked', {
-        headers: {
-          'X-Authorization': await AsyncStorage.getItem('sessionAuthToken'),
-        },
-      });
-      let json = null;
+      const response = await getBlockedUsersRequest();
+      console.log('Contacts new request: ', response);
 
-      if (response.status === 200) {
-        json = await response.json();
-      } else if (response.status === 401) {
-        this.setState({ error: 'Unauthorised.' }, () => {});
-      } else if (response.status === 500) {
-        this.setState({ error: 'Something went wrong. Please try again.' }, () => {});
-      }
-
-      this.setState({
-        blockedUsers: json,
-      });
+      blockedUsers = response.data;
+    } catch (error) {
+      // this.setState({ error: error.toJSON() }, () => {});
+      console.log('error json: ', error.toJSON());
     } finally {
       this.setState.isLoading = false;
       this.setState.refresh = !this.state.refresh;
-      console.log(this.state.error);
     }
+    this.setState({
+      blockedUsers,
+    });
   };
 
   render() {

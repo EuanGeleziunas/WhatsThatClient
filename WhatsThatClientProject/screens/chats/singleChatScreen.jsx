@@ -8,8 +8,8 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, FlatList, TextInput } from 'react-native';
 import Feather from 'react-native-vector-icons/Feather';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { brandStyles } from '../src/styles/brandStyles';
-import ChatMessage from '../components/chatMessage';
+import { brandStyles } from '../../src/styles/brandStyles';
+import ChatMessage from '../../components/chatMessage';
 
 export default class SingleChatScreen extends Component {
   constructor(props) {
@@ -18,17 +18,9 @@ export default class SingleChatScreen extends Component {
     this.state = {
       chatId: '',
       chatName: '',
-      //   chatMembers: [],
       chatMessages: [],
       newMessage: '',
       refreshKey: 0,
-      //   firstName: '',
-      //   lastName: '',
-      //   email: '',
-      //   photo: '',
-      //   isLoading: true,
-      //   isContactAdded: false,
-      //   isContactBlocked: false,
     };
   }
 
@@ -44,7 +36,6 @@ export default class SingleChatScreen extends Component {
   }
 
   componentWillUnmount() {
-    // Clean up the listener when the component is unmounted
     this.focusListener();
   }
 
@@ -60,14 +51,11 @@ export default class SingleChatScreen extends Component {
 
       this.setState({
         chatName: json.name,
-        // chatMembers: json.members,
         chatMessages: json.messages,
       });
       console.log(this.state.chatName);
     } catch (error) {
-      this.setState({
-        // error: 'Failed to fetch profile data.',
-      });
+      this.setState({});
     }
   };
 
@@ -91,11 +79,10 @@ export default class SingleChatScreen extends Component {
       if (response.status === 200) {
         this.setState(
           (prevState) => ({
-            newMessage: '', // Clear the new message input
-            refreshKey: prevState.refreshKey + 1, // Increment refreshKey to trigger re-render
+            newMessage: '',
+            refreshKey: prevState.refreshKey + 1,
           }),
           () => {
-            // Call the getSingleChatRequest after state update
             this.getSingleChatRequest();
           },
         );

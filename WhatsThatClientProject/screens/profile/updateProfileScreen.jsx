@@ -2,18 +2,9 @@
 /* eslint-disable no-unused-vars */
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import {
-  ActivityIndicator,
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import { brandStyles } from '../src/styles/brandStyles';
-import BrandButton from '../components/brandButton';
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { brandStyles } from '../../src/styles/brandStyles';
+import BrandButton from '../../components/brandButton';
 
 export default class UpdateProfileScreen extends Component {
   constructor(props) {
@@ -49,8 +40,6 @@ export default class UpdateProfileScreen extends Component {
       () => {
         console.log('Update profile state', this.state);
       },
-
-      // this.setState.isLoading = false;
     );
   }
 
@@ -94,7 +83,7 @@ export default class UpdateProfileScreen extends Component {
       .then((response) => {
         if (response.status === 200) {
           console.log('User updated');
-          this.props.navigation.navigate('Profile');
+          this.props.navigation.navigate('UserProfile');
         } else {
           console.log('error');
         }
@@ -105,13 +94,6 @@ export default class UpdateProfileScreen extends Component {
   }
 
   render() {
-    // if (this.state.isLoading) {
-    //   return (
-    //     <View>
-    //       <ActivityIndicator />
-    //     </View>
-    //   );
-    // } else {
     return (
       <View style={styles.container}>
         <View style={styles.titleContainer}>
