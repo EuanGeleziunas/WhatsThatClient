@@ -1,3 +1,5 @@
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/react-in-jsx-scope */
 /* eslint-disable no-unused-vars */
@@ -45,7 +47,7 @@ export default function CameraTakePicture({ navigation }) {
       .then((response) => {
         if (response.status === 200) {
           console.log('Picture added', response);
-          navigation.navigate('Profile');
+          navigation.navigate('UserProfile');
         } else {
           console.log('error');
         }

@@ -27,10 +27,15 @@ export default class ContactScreen extends Component {
         this.getContactsRequest();
       }
     });
+
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.getContactsRequest();
+    });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+    this.focusListener();
   }
 
   checkLoggedIn = async () => {
@@ -95,7 +100,7 @@ export default class ContactScreen extends Component {
           </View>
           {this.state.contacts === null || this.state.contacts.length === 0 ? (
             <View style={styles.noContactsContainer}>
-              <Text style={styles.noContactsText}>You currently have no contacts.</Text>
+              <Text style={styles.subTitle}>You currently have no contacts.</Text>
             </View>
           ) : (
             <FlatList

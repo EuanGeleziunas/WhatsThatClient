@@ -23,22 +23,18 @@ export default class BlockedListScreen extends Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      if (this.checkLoggedIn()) {
-        this.getBlockedUsersRequest();
-      }
+      this.getBlockedUsersRequest();
+    });
+
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+      this.getBlockedUsersRequest();
     });
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+    this.focusListener();
   }
-
-  checkLoggedIn = async () => {
-    const loginToken = await AsyncStorage.getItem('sessionAuthToken');
-    if (loginToken == null) {
-      this.props.navigation.navigate('Login');
-    }
-  };
 
   getBlockedUsersRequest = async () => {
     try {
@@ -86,7 +82,7 @@ export default class BlockedListScreen extends Component {
           {console.log('Blocked users', this.state.blockedUsers)}
           {this.state.blockedUsers === null || this.state.blockedUsers.length === 0 ? (
             <View style={styles.noBlockedUsersContainer}>
-              <Text style={styles.noBlockedUsersText}>You currently have no blocked users.</Text>
+              <Text style={styles.subTitle}>You currently have no blocked users.</Text>
             </View>
           ) : (
             <FlatList
